@@ -82,13 +82,47 @@ export default function SnapScreen() {
   };
 
   // Handle generating with the photos
-  const generateWithPhotos = () => {
-    // Here you would implement the logic to process the photos
-    console.log('Generating with photos:', photos);
-    console.log('Dish name:', dishName);
+  const generateWithPhotos = async () => {
+    try {
+      // Build the API URL (replace with your actual API endpoint)
+      let apiUrl = 'https://api.example.com/analyze-food?';
 
-    // Navigate to the recipe modal
-    router.push('/recipe');
+      // Add dish name to the URL if available
+      if (dishName.trim()) {
+        apiUrl += `dishName=${encodeURIComponent(dishName.trim())}&`;
+      }
+
+      // Add photo URIs to the URL
+      photos.forEach((photo, index) => {
+        apiUrl += `photoUri${index}=${encodeURIComponent(photo.uri)}&`;
+      });
+
+      // Remove trailing '&' if it exists
+      apiUrl = apiUrl.endsWith('&') ? apiUrl.slice(0, -1) : apiUrl;
+
+      console.log('Calling API:', apiUrl);
+
+      // Make the API call
+      const response = await fetch(apiUrl);
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('API response:', data);
+
+      // Navigate to the recipe modal with the data
+      router.push({
+        pathname: '/recipe',
+        params: { data: JSON.stringify(data) }
+      });
+
+    } catch (error) {
+      console.error('Error generating with photos:', error);
+      // You might want to show an error message to the user here
+      alert('Failed to process your photos. Please try again.');
+    }
   };
 
   // Main landing page
