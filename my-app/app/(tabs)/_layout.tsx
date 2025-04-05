@@ -23,14 +23,14 @@ export default function TabLayout() {
         name="snap"
         options={{
           title: 'Snap',
-          tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="home" size={24} color={color} />,
+          tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="camera" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="compass" size={24} color={color} />,
+          title: 'My Recipes',
+          tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="book" size={24} color={color} />,
         }}
       />
       <Tabs.Screen

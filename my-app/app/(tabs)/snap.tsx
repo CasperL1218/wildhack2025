@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { useState, useRef } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { useRouter } from 'expo-router';
 
 type PhotoItem = {
   uri: string;
@@ -10,6 +11,7 @@ type PhotoItem = {
 };
 
 export default function SnapScreen() {
+  const router = useRouter();
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [cameraPermission, requestCameraPermission] = ImagePicker.useCameraPermissions();
@@ -18,6 +20,7 @@ export default function SnapScreen() {
   const [dishName, setDishName] = useState<string>('');
   const [showCamera, setShowCamera] = useState<boolean>(false);
   const [showGallery, setShowGallery] = useState<boolean>(false);
+  const [pressedPhotoIndex, setPressedPhotoIndex] = useState<number | null>(null);
   const cameraRef = useRef<CameraView>(null);
 
   // Request permissions
@@ -82,8 +85,10 @@ export default function SnapScreen() {
   const generateWithPhotos = () => {
     // Here you would implement the logic to process the photos
     console.log('Generating with photos:', photos);
-    // For now, just log the photos and dish name
     console.log('Dish name:', dishName);
+
+    // Navigate to the recipe modal
+    router.push('/recipe');
   };
 
   // Main landing page
@@ -105,7 +110,19 @@ export default function SnapScreen() {
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.photosScroll}>
                 {photos.map((photo, index) => (
                   <View key={index} style={styles.photoItem}>
-                    <Image source={{ uri: photo.uri }} style={styles.thumbnail} />
+                    <View style={styles.photoWrapper}>
+                      <Image source={{ uri: photo.uri }} style={styles.thumbnail} />
+                      <TouchableOpacity
+                        style={styles.deleteButton}
+                        onPress={() => {
+                          const newPhotos = [...photos];
+                          newPhotos.splice(index, 1);
+                          setPhotos(newPhotos);
+                        }}
+                      >
+                        <Ionicons name="close-circle" size={24} color="#FF3B30" />
+                      </TouchableOpacity>
+                    </View>
                     {photo.dishName && <Text style={styles.photoLabel}>{photo.dishName}</Text>}
                   </View>
                 ))}
@@ -447,5 +464,16 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 18,
     fontWeight: '500',
+  },
+  photoWrapper: {
+    position: 'relative',
+  },
+  deleteButton: {
+    position: 'absolute',
+    top: -8,
+    right: -8,
+    backgroundColor: '#1E1E1E',
+    borderRadius: 12,
+    padding: 2,
   },
 });
