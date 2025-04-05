@@ -31,6 +31,12 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="recipe" options={{
+          presentation: 'transparentModal',
+          animation: 'fade',
+          headerShown: false,
+          contentStyle: { backgroundColor: 'transparent' }
+        }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
