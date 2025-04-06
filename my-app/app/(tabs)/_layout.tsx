@@ -34,7 +34,7 @@ export default function TabLayout() {
           options={{
             headerShown: false,
             title: '',
-            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="map-marker" size={32} color={color} />,
+            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="cutlery" size={32} color={color} />,
           }}
         />
         <Tabs.Screen
@@ -42,7 +42,7 @@ export default function TabLayout() {
           options={{
             headerShown: false,
             title: '',
-            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="camera" size={32} color={color} />,
+            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="plus-circle" size={32} color={color} />,
           }}
         />
         <Tabs.Screen
@@ -50,7 +50,7 @@ export default function TabLayout() {
           options={{
             headerShown: false,
             title: '',
-            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="book" size={32} color={color} />,
+            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="user" size={32} color={color} />,
           }}
         />
         <Tabs.Screen
