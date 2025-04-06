@@ -17,7 +17,8 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     Baloo: require('../assets/fonts/Baloo-Regular.ttf'),
-    Nunito: require('../assets/fonts/Nunito-Regular.ttf')
+    Nunito: require('../assets/fonts/Nunito-Regular.ttf'),
+    NunitoBold: require('../assets/fonts/Nunito-Bold.ttf'),
   });
 
   useEffect(() => {
