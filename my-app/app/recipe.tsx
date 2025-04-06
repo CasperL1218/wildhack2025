@@ -32,17 +32,17 @@ export default function RecipeModal() {
     switch (optionType) {
       case 'sustainable':
         return {
-          backgroundColor: '#00000', // Light teal color
+          backgroundColor: '#8dc8c8', // Light teal color
           title: 'Recreate Sustainably'
         };
       case 'local':
         return {
-          backgroundColor: '#9d87ba', // Purple color
+          backgroundColor: '#9376b4', // Purple color
           title: 'Recreate Locally'
         };
       default:
         return {
-          backgroundColor: '#e89852', // Orange color
+          backgroundColor: '#e18e2b', // Orange color
           title: 'Recreate Originally'
         };
     }
@@ -52,11 +52,11 @@ export default function RecipeModal() {
   const getTabColor = () => {
     switch (optionType) {
       case 'sustainable':
-        return '#a2c4a2'; // Light teal
+        return '#8dc8c8'; // Light teal
       case 'local':
-        return '#9d87ba'; // Purple
+        return '#9376b4'; // Purple
       default:
-        return '#e89852'; // Orange
+        return '#e18e2b'; // Orange
     }
   };
 
