@@ -32,7 +32,7 @@ export default function RecipeModal() {
     switch (optionType) {
       case 'sustainable':
         return {
-          backgroundColor: '#a2c4a2', // Light teal color
+          backgroundColor: '#00000', // Light teal color
           title: 'Recreate Sustainably'
         };
       case 'local':
