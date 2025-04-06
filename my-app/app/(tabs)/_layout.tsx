@@ -16,6 +16,8 @@ export default function TabLayout() {
             borderTopColor: '#32401A',
             height: 70,
             paddingBottom: 30,
+            height: 70,
+            paddingBottom: 26,
             paddingTop: 6,
             paddingHorizontal: 5,
             // Safe area for iPhone X+ models
