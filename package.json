@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "expo": "^52.0.44",
+    "react-native-image-resizer": "^1.4.5",
     "react-native-maps": "^1.20.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/react": "~18.3.12"
   }
 }

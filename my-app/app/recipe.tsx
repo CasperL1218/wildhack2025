@@ -18,7 +18,7 @@ type RecipeSection = {
 type RecipeProps = {
   dishName: string;
   ingredients: RecipeSection[];
-  co2Emitted: number;
+  co2Emitted: string;
   waterUsage: number;
   foodMiles: number;
 };
@@ -92,8 +92,8 @@ export default function RecipeModal() {
   // Sample recipe data - this would normally come from an API or state
   const recipe: RecipeProps = {
     dishName: optionType === 'sustainable' ? 'Recreate Sustainably' : optionType === 'local' ? 'Recreate Locally' : 'Recreate Originally',
-    co2Emitted: 78,
     waterUsage: 85,
+    co2Emitted: 'medium',
     foodMiles: 90,
     ingredients: [
       {
@@ -122,6 +122,17 @@ export default function RecipeModal() {
       // }
     ]
   };
+
+  const calculateCO2Status = (co2Emitted: string) => {
+    if (co2Emitted == "low") {
+      return 110; 
+    } else if (co2Emitted == "medium") {
+      return 230; 
+    } else {
+      return 360; 
+    }
+  };
+  const co2Status = calculateCO2Status(recipe.co2Emitted);
 
   const handleBack = () => {
     router.back();
@@ -158,7 +169,7 @@ export default function RecipeModal() {
             <View style={styles.metricRow}>
               <Text style={styles.metricLabel}>CO2 Emitted</Text>
               <View style={styles.progressBarContainer}>
-                <View style={[styles.progressBar, { backgroundColor: tabColor }, { width: `${recipe.co2Emitted}%` }]} />
+                <View style={[styles.progressBar, { backgroundColor: tabColor }, { width: co2Status }]} />
               </View>
             </View>
 
@@ -228,7 +239,7 @@ export default function RecipeModal() {
           <View style={styles.metricRow}>
             <Text style={styles.metricLabel}>CO2 Emitted</Text>
             <View style={styles.progressBarContainer}>
-              <View style={[styles.progressBar, , { backgroundColor: tabColor }, { width: `${recipe.co2Emitted}%` }]} />
+              <View style={[styles.progressBar, , { backgroundColor: tabColor }, { width: co2Status}]} />
             </View>
           </View>
 

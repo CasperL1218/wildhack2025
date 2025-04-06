@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 
 // Define a type for user data
 type UserProfile = {
@@ -33,6 +34,7 @@ export default function ProfileScreen() {
 
   const pickProfile = async () => {
     try {
+
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
         Alert.alert('Permission Required', 'Sorry, we need media library permissions.');
@@ -52,6 +54,13 @@ export default function ProfileScreen() {
     } catch (error) {
         console.error('Error picking profile image:', error);
     }
+  };
+
+  const router = useRouter();
+  const routesPress = (optionType: string) => {
+    router.push({
+      pathname: '/explore'
+    });
   };
 
   return (
@@ -94,12 +103,12 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.actionsContainer}>
-          <TouchableOpacity style={styles.actionButton}>
+          {/* <TouchableOpacity style={styles.actionButton}>
             <Ionicons name="settings-outline" size={16} color="black" />
             <Text style={styles.buttonText}>Edit Profile</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
-          <TouchableOpacity style={[styles.actionButton, styles.mapButton]}>
+          <TouchableOpacity style={[styles.actionButton, styles.mapButton]} onPress={() => routesPress('run')}>
             <Ionicons name="map-outline" size={16} color="black" />
             <Text style={styles.buttonText}>My Routes</Text>
           </TouchableOpacity>
@@ -119,6 +128,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', // Align logo and title horizontally
     alignItems: 'center', // Vertically center them
     marginBottom: 20, // Add some spacing below the header
+    marginTop: 10,
   },
   logo: {
     width: 50, // Adjust width as per your logo size
@@ -213,7 +223,16 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginBottom: 100, 
   },
-  actionButton: {
+  // actionButton: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   backgroundColor: '#e6e0d9',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 20,
+  //   borderRadius: 8,
+  //   gap: 8,
+  // },
+  mapButton: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#e6e0d9',
@@ -221,9 +240,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 8,
     gap: 8,
-  },
-  mapButton: {
-    backgroundColor: '#e6e0d9',
   },
   buttonText: {
     color: 'black',

@@ -104,6 +104,8 @@ export default function SnapScreen() {
       }
       return;
     }
+    // TODO!
+    router.push('/(tabs)/results')
 
     // Log photo info before navigating
     console.log('Image data being passed:', photos);
@@ -697,8 +699,8 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   galleryButton: {
-    backgroundColor: '#333',
-    borderRadius: 15,
+    backgroundColor: '#333d1e',
+    borderRadius: 25,
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
@@ -710,6 +712,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 18,
     fontWeight: '500',
+    fontFamily: "Nunito",
   },
   photoWrapper: {
     position: 'relative',
@@ -740,10 +743,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
+    fontFamily: "Nunito",
   },
   modalButton: {
     backgroundColor: '#333',
-    borderRadius: 10,
+    borderRadius: 25,
     padding: 15,
     flexDirection: 'row',
     alignItems: 'center',
