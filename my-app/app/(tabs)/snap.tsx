@@ -117,8 +117,8 @@ export default function SnapScreen() {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.header}>
-            <Text style={styles.title}>Food Recognition</Text>
-            <Text style={styles.subtitle}>Take or upload photos of your food</Text>
+            <Text style={styles.title}>New Recipe?</Text>
+            <Text style={styles.subtitle}>Take or upload photos of your dish to learn more about how to recreate it!</Text>
           </View>
 
           {/* ZIP Code Input */}
@@ -140,9 +140,10 @@ export default function SnapScreen() {
                 placeholderTextColor="#999"
               />
             ) : (
-              <Text style={styles.zipText}>Your ZIP Code: {zipCode}</Text>
+              <Text style={styles.zipText}>Source local ingredients, enter ZIP: {zipCode}</Text>
             )}
           </TouchableOpacity>
+
 
           {photos.length > 0 && (
             <View style={styles.photosContainer}>
@@ -175,7 +176,7 @@ export default function SnapScreen() {
             onPress={addNewPhoto}
           >
             <Ionicons name="camera" size={32} color="white" />
-            <Text style={styles.uploadPhotoText}>+ Upload Image / Take Photo</Text>
+            <Text style={styles.uploadPhotoText}>Upload Image / Take Photo</Text>
           </TouchableOpacity>
 
           {photos.length > 0 && (
@@ -196,7 +197,7 @@ export default function SnapScreen() {
             style={styles.generateButton}
             onPress={generateWithPhotos}
           >
-            <Text style={styles.generateButtonText}>Generate</Text>
+            <Text style={styles.generateButtonText}>Go</Text>
           </TouchableOpacity>
 
           {/* Upload Modal */}
@@ -208,7 +209,7 @@ export default function SnapScreen() {
           >
             <View style={styles.modalOverlay}>
               <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>Choose an Option</Text>
+                {/* <Text style={styles.modalTitle}>Choose an Option</Text> */}
 
                 <TouchableOpacity
                   style={styles.modalButton}
@@ -331,7 +332,7 @@ export default function SnapScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
+    backgroundColor: '#84a24d',
   },
   scrollContent: {
     flexGrow: 1,
