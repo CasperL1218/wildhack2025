@@ -8,6 +8,8 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { PhotoProvider } from '../context/PhotoContext';
+import { ResponseProvider } from '../context/ResponseContext';
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -31,20 +33,22 @@ export default function RootLayout() {
 
   return (
     <PhotoProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="recipe" options={{
-            presentation: 'modal',
-            animation: 'slide_from_bottom',
-            headerShown: false,
-            contentStyle: { backgroundColor: 'transparent' }
-          }} />
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
+      <ResponseProvider>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="recipe" options={{
+              presentation: 'modal',
+              animation: 'slide_from_bottom',
+              headerShown: false,
+              contentStyle: { backgroundColor: 'transparent' }
+            }} />
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </ResponseProvider>
     </PhotoProvider>
   );
 }

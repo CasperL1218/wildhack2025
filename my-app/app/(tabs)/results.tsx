@@ -3,6 +3,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { usePhotoContext } from '../../context/PhotoContext';
+import { useResponseContext } from '../../context/ResponseContext';
 
 type PhotoItem = {
   uri: string;
@@ -14,11 +15,19 @@ export default function ResultsScreen() {
   const params = useLocalSearchParams();
   const [showAlternativeInput, setShowAlternativeInput] = useState(false);
   const { photos } = usePhotoContext();
+  const { response } = useResponseContext();
 
   useEffect(() => {
     // Log the received photos
     console.log('Received images in results page:', photos);
-  }, [photos]);
+    
+    console.log('Received server data in results page:', response);
+    // console.log('Response type:', typeof response);
+    console.log('Full response:', JSON.stringify(response, null, 2));
+    const r = JSON.stringify(response)
+
+
+  }, [photos, response]);
 
   const handleOptionPress = (optionType: string) => {
     // Navigate to recipe screen with option type and photos

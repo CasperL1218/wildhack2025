@@ -1,8 +1,11 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # Import CORS
 from services import extract_text, scan_food, sustainable_recipe, seasonal_recipe, ingredient_list, final_recipe
 import json
 
 app = Flask(__name__)
+
+CORS(app)
 
 @app.route('/extract-text', methods=['POST'])
 def extract_text_endpoint():

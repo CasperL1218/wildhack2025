@@ -5,6 +5,10 @@ import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { usePhotoContext } from '../../context/PhotoContext';
+import { useResponseContext } from '../../context/ResponseContext';
+
+import axios from 'axios';
+import FormData from 'form-data';
 
 type PhotoItem = {
   uri: string;
@@ -27,6 +31,7 @@ export default function SnapScreen() {
   const [editingZip, setEditingZip] = useState<boolean>(false);
   const cameraRef = useRef<CameraView>(null);
   const { setPhotos: setGlobalPhotos } = usePhotoContext();
+  const { setResponse } = useResponseContext();
 
   // Request permissions
   const requestPermissions = async () => {
@@ -87,7 +92,8 @@ export default function SnapScreen() {
   };
 
   // Handle generating with the photos
-  const generateWithPhotos = () => {
+  const generateWithPhotos = async () => {
+    console.log("generateWithPhotos called");
     if (photos.length === 0) {
       // Show toast message if no photos
       try {
@@ -101,11 +107,78 @@ export default function SnapScreen() {
     // Log photo info before navigating
     console.log('Image data being passed:', photos);
 
-    // Save photos to global state
-    setGlobalPhotos(photos);
+    const formData = new FormData();
+    for (let i = 0; i < photos.length; i++) {
+      const photo = photos[i];
 
-    // Navigate to results tab
-    router.push('/(tabs)/results');
+      console.log(`Processing photo at index ${i}:`, photo);
+
+      if (!photo || !photo.uri) {
+          console.error(`Invalid photo at index ${i}:`, photo);
+          Alert.alert("Error", `Invalid photo data at index ${i}.`);
+          return; // Stop processing if an invalid photo is found
+      }
+
+      try {
+          console.log(`Photo URI at index ${i}:`, photo.uri);
+          const base64Data = photo.uri.split(',')[1];
+          console.log(`Base64 data at index ${i}:`, base64Data); // Add this line
+          const byteCharacters = atob(base64Data);
+          console.log(`Byte characters length at index ${i}:`, byteCharacters.length);
+          const byteArray = new Uint8Array(byteCharacters.length);
+
+          for (let j = 0; j < byteCharacters.length; j++) {
+              byteArray[j] = byteCharacters.charCodeAt(j);
+          }
+
+          const blob = new Blob([byteArray], { type: 'image/jpeg' });
+          console.log(`Blob created at index ${i}:`, blob);
+          const file = new File([blob], photo.dishName || `image_${i}.jpg`, { type: 'image/jpeg' });
+          console.log(`File at index ${i}:`, file);
+
+          formData.append('file', file); // Append each file with a unique name
+          console.log(`File appended to formData at index ${i}`);
+
+          
+
+      } catch (error) {
+          console.error(`Error processing photo at index ${i}:`, error);
+          Alert.alert("Error", `Failed to process photo at index ${i}.`);
+          return; // Stop processing if there's an error
+      }
+  }
+
+  formData.append('zipcode', zipCode);
+  console.log('Form data prepared:', formData);
+
+  setGlobalPhotos(photos);
+  try {
+      const response = await axios.post('http://127.0.0.1:5000/scan-food', formData, {
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+      });
+
+      console.log('Response from server:', response);
+      
+      setResponse(response.data);
+
+      
+      router.push('/(tabs)/results');
+      // router.push({
+      //   pathname: '/(tabs)/results'
+      // });
+
+  } catch (error) {
+      console.error('Error sending data to server:', error);
+      Alert.alert("Error", "Failed to send data to server.");
+  }
+
+    // // Save photos to global state
+    // setGlobalPhotos(photos);
+
+    // // Navigate to results tab
+    // router.push('/(tabs)/results');
   };
 
   // Main landing page
