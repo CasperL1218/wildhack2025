@@ -8,9 +8,22 @@ from firebase_admin import credentials, firestore, auth
 from datetime import timedelta
 import os
 from dotenv import load_dotenv
+from flask_cors import CORS  # Import CORS
 
 load_dotenv()
 app = Flask(__name__)
+# Enable CORS with specific settings
+CORS(app, resources={r"/*": {"origins": "*", "allow_headers": ["Content-Type", "Accept"], "methods": ["GET", "POST", "OPTIONS"]}})
+
+# Handle OPTIONS requests explicitly
+@app.route('/', defaults={'path': ''}, methods=['OPTIONS'])
+@app.route('/<path:path>', methods=['OPTIONS'])
+def handle_options(path):
+    response = make_response()
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Accept')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    return response
 
 cred = credentials.Certificate("firebase-auth.json")
 firebase_admin.initialize_app(cred)
@@ -204,6 +217,12 @@ def create_recipe():
         if not data or 'dishName' not in data or 'ingredients' not in data or 'recipeSteps' not in data or 'userId' not in data:
             return jsonify({"success": False, "error": "Missing required fields: dishName, ingredients, recipeSteps, and userId"}), 400
         
+        # Validate route field if provided
+        route = data.get('route', 'original')  # Default to 'original' if not provided
+        valid_routes = ['original', 'local', 'sustainable']
+        if route not in valid_routes:
+            return jsonify({"success": False, "error": f"Invalid route value. Must be one of: {', '.join(valid_routes)}"}), 400
+        
         user_id = data['userId']
         # Check if user exists
         user_ref = db.collection('users').document(user_id)
@@ -221,6 +240,7 @@ def create_recipe():
             "ingredients": data['ingredients'],
             "recipeSteps": data['recipeSteps'],
             "userId": data['userId'],
+            "route": route,  # Add the route field
         }
         
         # Add timestamp in Firestore but don't include in response
@@ -242,10 +262,14 @@ def create_recipe():
 def get_recipes_by_user(user_id):
     try:
         # Query recipes collection where userId matches
-        recipes_query = db.collection('recipes').where('userId', '==', user_id).stream()
+        recipes_query = db.collection('recipes').where('userId', '==', user_id)
+        
+
+        # Execute query
+        recipes_results = recipes_query.stream()
         
         recipes = []
-        for doc in recipes_query:
+        for doc in recipes_results:
             recipe_data = doc.to_dict()
             recipe_data['id'] = doc.id
             recipes.append(recipe_data)
@@ -253,6 +277,68 @@ def get_recipes_by_user(user_id):
         return jsonify({"success": True, "data": recipes})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+
+# Get a user's most common recipe route
+@app.route('/users/<user_id>/most-common-route', methods=['GET'])
+def get_most_common_route(user_id):
+    try:
+        # Check if user exists
+        user_doc = db.collection('users').document(user_id).get()
+        
+        if not user_doc.exists:
+            return jsonify({"success": False, "error": f"User with ID {user_id} does not exist"}), 404
+        
+        # Query recipes collection where userId matches
+        recipes_query = db.collection('recipes').where('userId', '==', user_id).stream()
+        
+        # Count occurrences of each route
+        route_counts = {
+            'original': 0,
+            'local': 0,
+            'sustainable': 0
+        }
+        
+        total_recipes = 0
+        for doc in recipes_query:
+            recipe_data = doc.to_dict()
+            route = recipe_data.get('route', 'original')
+            if route in route_counts:
+                route_counts[route] += 1
+                total_recipes += 1
+        
+        if total_recipes == 0:
+            # No recipes found, default to 'original'
+            most_common_route = 'original'
+            most_common_count = 0
+        else:
+            # Find the route with the highest count
+            most_common_route = 'original'  # Default in case of tie
+            most_common_count = 0
+            
+            for route, count in route_counts.items():
+                if count > most_common_count:
+                    most_common_route = route
+                    most_common_count = count
+        
+        # Calculate percentage if there are recipes
+        percentage = (most_common_count / total_recipes * 100) if total_recipes > 0 else 0
+        
+        return jsonify({
+            "success": True,
+            "data": {
+                "userId": user_id,
+                "mostCommonRoute": most_common_route,
+                "count": most_common_count,
+                "totalRecipes": total_recipes,
+                "percentage": round(percentage, 2),
+                "routeCounts": route_counts
+            }
+        })
+            
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+       
 
 if __name__ == "__main__":
     app.run(debug=True)

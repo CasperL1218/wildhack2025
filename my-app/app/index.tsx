@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { useState, useEffect, useRef } from 'react';
@@ -33,9 +34,16 @@ console.log(redirectUri);
 console.log('==========================================');
 
 export default function LoginPage() {
-  const { isAuthenticated, login, isLoading } = useAuth();
+  const { isAuthenticated, login, logout, isLoading, userInfo } = useAuth();
   const [localLoading, setLocalLoading] = useState(false);
   const navigatedRef = useRef(false);
+
+  // Debug the backend user
+  // useEffect(() => {
+  //   if (backendUser) {
+  //     console.log('Backend user loaded:', backendUser);
+  //   }
+  // }, [backendUser]);
 
   // If already authenticated, go to tabs - simple version
   useEffect(() => {
@@ -45,6 +53,19 @@ export default function LoginPage() {
       router.replace('/(tabs)');
     }
   }, [isAuthenticated, isLoading]);
+
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      setLocalLoading(true);
+      await logout();
+      console.log('User logged out');
+    } catch (error) {
+      console.error('Logout error', error);
+    } finally {
+      setLocalLoading(false);
+    }
+  };
 
   // Handle login with Auth0
   const handleLogin = async () => {
@@ -102,24 +123,37 @@ export default function LoginPage() {
 
   // Login UI
   return (
-    
     <View style={styles.container}>
-
       <View style={styles.logoContainer}>
         <Text style={styles.title}>Welcome to ClickBite!</Text>
         {/* You can add your app logo here */}
         {/* <Image source={require('../assets/logo.png')} style={styles.logo} /> */}
       </View>
 
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginButtonText}>Log In / Sign Up</Text>
-      </TouchableOpacity>
+      {isAuthenticated ? (
+        // Show logout button if authenticated
+        <>
+          <Text style={styles.welcomeText}>
+            Welcome back, {userInfo?.name || 'User'}!
+          </Text>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.buttonText}>Log Out</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        // Show login button if not authenticated
+        <>
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+            <Text style={styles.loginButtonText}>Log In / Sign Up</Text>
+          </TouchableOpacity>
 
-      <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>
-          Sign in to access your account and start using the app.
-        </Text>
-      </View>
+          <View style={styles.infoContainer}>
+            <Text style={styles.infoText}>
+              Sign in to access your account and start using the app.
+            </Text>
+          </View>
+        </>
+      )}
     </View>
   );
 }
@@ -152,8 +186,23 @@ const styles = StyleSheet.create({
     marginBottom: -10,
     fontFamily: 'Baloo',
   },
+  welcomeText: {
+    fontSize: 22,
+    color: '#ffffff',
+    marginBottom: 20,
+    fontFamily: 'Nunito',
+    textAlign: 'center',
+  },
   loginButton: {
     backgroundColor: '#e6e0d9',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+    width: '80%',
+    alignItems: 'center',
+  },
+  logoutButton: {
+    backgroundColor: '#d9534f',
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 25,
@@ -163,6 +212,12 @@ const styles = StyleSheet.create({
   loginButtonText: {
     fontSize: 18,
     fontWeight: 'bold',
+    fontFamily: 'NunitoBold',
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#ffffff',
     fontFamily: 'NunitoBold',
   },
   infoContainer: {
