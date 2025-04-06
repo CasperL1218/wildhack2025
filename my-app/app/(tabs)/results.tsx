@@ -1,17 +1,33 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { usePhotoContext } from '../../context/PhotoContext';
+
+type PhotoItem = {
+  uri: string;
+  dishName?: string;
+};
 
 export default function ResultsScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams();
   const [showAlternativeInput, setShowAlternativeInput] = useState(false);
+  const { photos } = usePhotoContext();
+
+  useEffect(() => {
+    // Log the received photos
+    console.log('Received images in results page:', photos);
+  }, [photos]);
 
   const handleOptionPress = (optionType: string) => {
-    // Navigate to recipe screen with option type
+    // Navigate to recipe screen with option type and photos
     router.push({
       pathname: '/recipe',
-      params: { optionType }
+      params: {
+        optionType,
+        photoData: params.photoData
+      }
     });
   };
 
@@ -19,22 +35,23 @@ export default function ResultsScreen() {
     <View style={styles.container}>
       <Text style={styles.appName}>myApp</Text>
 
-      <View style={styles.dishHeader}>
-        <Text style={styles.dishName}>Dish Name</Text>
-        <View style={styles.profileCircle}>
-          <Ionicons name="person" size={28} color="#9b9e8c" />
+      <ImageBackground source={{ uri: photos[0].uri }} style={styles.dishHeader}>
+        <View style={styles.dishHeader}>
+          <Text style={styles.dishName}>Dish Name</Text>
+          <View style={styles.profileCircle}>
+            <Ionicons name="person" size={28} color="#9b9e8c" />
+          </View>
         </View>
-      </View>
 
-      <Text style={styles.dishDescription}>15-20 word short blurb</Text>
+        <Text style={styles.dishDescription}>15-20 word short blurb</Text>
 
-      <TouchableOpacity
-        style={styles.alternativeButton}
-        onPress={() => setShowAlternativeInput(!showAlternativeInput)}
-      >
-        <Text style={styles.alternativeButtonText}>Something else?</Text>
-      </TouchableOpacity>
-
+        <TouchableOpacity
+          style={styles.alternativeButton}
+          onPress={() => setShowAlternativeInput(!showAlternativeInput)}
+        >
+          <Text style={styles.alternativeButtonText}>Something else?</Text>
+        </TouchableOpacity>
+      </ImageBackground>
       <Text style={styles.subtitle}>Choose your own route!</Text>
 
       <ScrollView style={styles.optionsScrollView}>

@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
+import { usePhotoContext } from '../../context/PhotoContext';
 
 type PhotoItem = {
   uri: string;
@@ -25,6 +26,7 @@ export default function SnapScreen() {
   const [showUploadModal, setShowUploadModal] = useState<boolean>(false);
   const [editingZip, setEditingZip] = useState<boolean>(false);
   const cameraRef = useRef<CameraView>(null);
+  const { setPhotos: setGlobalPhotos } = usePhotoContext();
 
   // Request permissions
   const requestPermissions = async () => {
@@ -96,55 +98,14 @@ export default function SnapScreen() {
       return;
     }
 
-    // Navigate to results tab instead of modal
+    // Log photo info before navigating
+    console.log('Image data being passed:', photos);
+
+    // Save photos to global state
+    setGlobalPhotos(photos);
+
+    // Navigate to results tab
     router.push('/(tabs)/results');
-
-    // Original API call code (commented out)
-    /*
-    try {
-      // Build the API URL (replace with your actual API endpoint)
-      let apiUrl = 'https://api.example.com/analyze-food?';
-
-      // Add zip code to the URL
-      apiUrl += `zipCode=${encodeURIComponent(zipCode)}&`;
-
-      // Add dish name to the URL if available
-      if (dishName.trim()) {
-        apiUrl += `dishName=${encodeURIComponent(dishName.trim())}&`;
-      }
-
-      // Add photo URIs to the URL
-      photos.forEach((photo, index) => {
-        apiUrl += `photoUri${index}=${encodeURIComponent(photo.uri)}&`;
-      });
-
-      // Remove trailing '&' if it exists
-      apiUrl = apiUrl.endsWith('&') ? apiUrl.slice(0, -1) : apiUrl;
-
-      console.log('Calling API:', apiUrl);
-
-      // Make the API call
-      const response = await fetch(apiUrl);
-
-      if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log('API response:', data);
-
-      // Navigate to the recipe modal with the data
-      router.push({
-        pathname: '/recipe',
-        params: { data: JSON.stringify(data) }
-      });
-
-    } catch (error) {
-      console.error('Error generating with photos:', error);
-      // You might want to show an error message to the user here
-      alert('Failed to process your photos. Please try again.');
-    }
-    */
   };
 
   // Main landing page
