@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', // Align logo and title horizontally
     alignItems: 'center', // Vertically center them
     margin: 20, // Add some spacing below the header
+    marginTop: 30,
   },
   appName: {
     fontSize: 25,

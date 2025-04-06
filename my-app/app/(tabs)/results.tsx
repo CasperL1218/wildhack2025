@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
+    marginLeft: 15,
   },
   dishName: {
     marginTop: 50,

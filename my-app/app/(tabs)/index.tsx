@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', // Align logo and title horizontally
     alignItems: 'center', // Vertically center them
     marginBottom: 20, // Add some spacing below the header
+    marginTop: 10,
   },
   logo: {
     width: 50, // Adjust width as per your logo size
