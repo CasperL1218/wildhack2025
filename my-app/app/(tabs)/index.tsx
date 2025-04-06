@@ -17,7 +17,7 @@ type UserProfile = {
 export default function ProfileScreen() {
   // User profile mock data
   const [profile, setProfile] = useState<UserProfile>({
-    name: "Kim Lee",
+    name: "Kim",
     role: "Food Explorer",
     location: "Lincoln, NE",
     zipcode: "60201",
@@ -43,7 +43,7 @@ export default function ProfileScreen() {
           </View>
 
           <Text style={styles.userName}>Hi {profile.name}!</Text>
-          <Text style={styles.userRole}>Your are a {profile.role}!</Text>
+          <Text style={styles.userRole}>You are a {profile.role}!</Text>
           <Text style={styles.favoriteRoute}>{profile.favoriteRoute} is your most taken route</Text>
 
           <View style={styles.statsContainer}>
@@ -58,29 +58,14 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>About Me</Text>
-          <Text style={styles.bioText}>{profile.bio}</Text>
-        </View>
-
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Achievements</Text>
-          {profile.achievements?.map((achievement, index) => (
-            <View key={index} style={styles.achievementItem}>
-              <Ionicons name="trophy-outline" size={24} color="#4CAF50" />
-              <Text style={styles.achievementText}>{achievement}</Text>
-            </View>
-          ))}
-        </View>
-
         <View style={styles.actionsContainer}>
           <TouchableOpacity style={styles.actionButton}>
-            <Ionicons name="settings-outline" size={16} color="white" />
+            <Ionicons name="settings-outline" size={16} color="black" />
             <Text style={styles.buttonText}>Edit Profile</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.actionButton, styles.mapButton]}>
-            <Ionicons name="map-outline" size={16} color="white" />
+            <Ionicons name="map-outline" size={16} color="black" />
             <Text style={styles.buttonText}>My Routes</Text>
           </TouchableOpacity>
         </View>
@@ -92,7 +77,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#8BAE5F', // Green background color
+    backgroundColor: '#84a24d', 
   },
   header: {
     padding: 20,
@@ -101,6 +86,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
+    fontFamily: "Baloo",
     color: 'black',
     marginBottom: 5,
   },
@@ -112,7 +98,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 75,
-    backgroundColor: '#F0EDE5', // Light beige color for profile image placeholder
+    backgroundColor: '#e6e0d9', 
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
@@ -124,41 +110,46 @@ const styles = StyleSheet.create({
     borderRadius: 75,
   },
   userName: {
-    fontSize: 28,
+    fontSize: 40,
     fontWeight: 'bold',
-    color: 'black',
-    marginBottom: 10,
-  },
-  userRole: {
-    fontSize: 20,
+    fontFamily: "Baloo",
     color: 'black',
     marginBottom: 5,
   },
+  userRole: {
+    fontSize: 20,
+    fontFamily: "Baloo",
+    color: 'black',
+  },
   favoriteRoute: {
     fontSize: 16,
-    color: '#444',
+    fontFamily: "Nunito",
+    color: '#333d1e',
     textAlign: 'center',
     marginBottom: 20,
   },
   statsContainer: {
     flexDirection: 'column',
     width: '100%',
-    marginVertical: 20,
+    marginVertical: 10,
   },
   statItem: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   statLabel: {
     fontSize: 16,
-    color: '#333',
+    fontFamily: "Nunito",
+    fontWeight: "bold",
+    color: '#333d1e',
     marginRight: 5,
   },
   statValue: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    fontFamily: "Nunito",
+    color: '#333d1e',
   },
   sectionContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -173,42 +164,27 @@ const styles = StyleSheet.create({
     color: 'black',
     marginBottom: 10,
   },
-  bioText: {
-    fontSize: 16,
-    color: '#333',
-    lineHeight: 24,
-  },
-  achievementItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  achievementText: {
-    fontSize: 16,
-    color: '#333',
-    marginLeft: 10,
-  },
   actionsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 15,
-    marginVertical: 20,
-    marginBottom: 100, // Add extra space at bottom for the tab bar
+    marginVertical: 10,
+    marginBottom: 100, 
   },
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#444',
+    backgroundColor: '#e6e0d9',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
     gap: 8,
   },
   mapButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#e6e0d9',
   },
   buttonText: {
-    color: 'white',
+    color: 'black',
     fontSize: 16,
     fontWeight: '500',
   },

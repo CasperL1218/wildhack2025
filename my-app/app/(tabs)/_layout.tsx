@@ -32,7 +32,7 @@ export default function TabLayout() {
           headerTintColor: 'white',
         }}>
         <Tabs.Screen
-          name="index"
+          name="explore"
           options={{
             headerShown: false,
             title: '',
@@ -48,7 +48,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="explore"
+          name="index"
           options={{
             headerShown: false,
             title: '',

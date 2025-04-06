@@ -75,7 +75,7 @@ export default function ResultsScreen() {
             <Text style={styles.optionTitle}>
               <Text>The <Text style={styles.underline}>OG</Text></Text>
             </Text>
-            <Text style={styles.emissionsText}>CO2 emissions: xx kg</Text>
+            <Text style={styles.emissionsText}>__ CO2 emissions</Text>
           </View>
         </TouchableOpacity>
 
@@ -89,7 +89,7 @@ export default function ResultsScreen() {
             <Text style={styles.optionTitle}>
             <Text style={styles.underline}>Green</Text> Warrior
             </Text>
-            <Text style={styles.emissionsText}>CO2 emissions: xx kg</Text>
+            <Text style={styles.emissionsText}>__ CO2 emissions</Text>
           </View>
         </TouchableOpacity>
 
@@ -103,7 +103,7 @@ export default function ResultsScreen() {
             <Text style={styles.optionTitle}>
             <Text style={styles.underline}>Local</Text> Lover 
             </Text>
-            <Text style={styles.emissionsText}>CO2 emissions: xx kg</Text>
+            <Text style={styles.emissionsText}>__ CO2 emissions</Text>
           </View>
         </TouchableOpacity>
       </ScrollView>
