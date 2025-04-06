@@ -31,16 +31,15 @@ export default function ResultsScreen() {
     });
   };
 
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.appName}>myApp</Text>
 
-      <ImageBackground source={{ uri: photos[0].uri }} style={styles.dishHeader}>
+      <ImageBackground source={{ uri: photos[0].uri }}>
         <View style={styles.dishHeader}>
           <Text style={styles.dishName}>Dish Name</Text>
-          <View style={styles.profileCircle}>
-            <Ionicons name="person" size={28} color="#9b9e8c" />
-          </View>
         </View>
 
         <Text style={styles.dishDescription}>15-20 word short blurb</Text>
@@ -63,7 +62,7 @@ export default function ResultsScreen() {
           <View style={[styles.optionCircle, { backgroundColor: '#e89852' }]} />
           <View style={styles.optionTextContainer}>
             <Text style={styles.optionTitle}>
-              Recreate <Text style={styles.underline}>Originally</Text>
+              <Text>The <Text style={styles.underline}>OG</Text></Text>
             </Text>
             <Text style={styles.emissionsText}>CO2 emissions: xx kg</Text>
           </View>
@@ -77,7 +76,7 @@ export default function ResultsScreen() {
           <View style={[styles.optionCircle, { backgroundColor: '#5f9e9f' }]} />
           <View style={styles.optionTextContainer}>
             <Text style={styles.optionTitle}>
-              Recreate <Text style={styles.underline}>Sustainably</Text>
+            <Text style={styles.underline}>Green</Text> Warrior
             </Text>
             <Text style={styles.emissionsText}>CO2 emissions: xx kg</Text>
           </View>
@@ -91,7 +90,7 @@ export default function ResultsScreen() {
           <View style={[styles.optionCircle, { backgroundColor: '#686f98' }]} />
           <View style={styles.optionTextContainer}>
             <Text style={styles.optionTitle}>
-              Recreate <Text style={styles.underline}>Locally</Text>
+            <Text style={styles.underline}>Local</Text> Lover 
             </Text>
             <Text style={styles.emissionsText}>CO2 emissions: xx kg</Text>
           </View>
@@ -104,7 +103,7 @@ export default function ResultsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#9b9e8c',
+    backgroundColor: '#E6E0D9',
     padding: 20,
   },
   appName: {
@@ -135,12 +134,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   alternativeButton: {
-    backgroundColor: '#e8dfd5',
+    backgroundColor: '#84A24D',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 25,
     alignItems: 'center',
     alignSelf: 'center',
+    marginRight: -650,
     marginBottom: 30,
   },
   alternativeButtonText: {
@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 30,
+    textAlign: 'center',
   },
   optionsScrollView: {
     flex: 1,

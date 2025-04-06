@@ -40,22 +40,20 @@ export default function MyRecipesScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>My Recipes</Text>
-        <Text style={styles.subtitle}>Your saved recipes</Text>
+        <Text style={styles.title}>Saved Recipes</Text>
       </View>
 
       {recipes.length > 0 ? (
         <ScrollView style={styles.scrollView}>
-          {recipes.map((recipe) => (
-            <TouchableOpacity key={recipe.id} style={styles.recipeCard}>
-              <Image source={{ uri: recipe.image }} style={styles.recipeImage} />
-              <View style={styles.recipeInfo}>
-                <Text style={styles.recipeName}>{recipe.dishName}</Text>
-                <Text style={styles.recipeDate}>{recipe.date}</Text>
+          <View style={styles.gridContainer}>
+            {recipes.map((recipe) => (
+              <View key={recipe.id} style={styles.gridItem}>
+                <TouchableOpacity key={recipe.id} style={styles.recipeCard}>
+                  <Image source={{ uri: recipe.image }} style={styles.recipeImage} />
+                </TouchableOpacity>
               </View>
-              <Ionicons name="chevron-forward" size={24} color="#999" />
-            </TouchableOpacity>
-          ))}
+            ))}
+          </View>
         </ScrollView>
       ) : (
         <View style={styles.emptyState}>
@@ -84,6 +82,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
     marginBottom: 5,
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
@@ -93,6 +92,18 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  gridItem: {
+    width: '50%',
+    height: 200,
+    padding: 5,
+    aspectRatio: 1,
+    // borderColor: 'red',
+    // borderWidth: 2,
+  },
   recipeCard: {
     flexDirection: 'row',
     backgroundColor: '#222',
@@ -100,24 +111,15 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     overflow: 'hidden',
     alignItems: 'center',
+    alignSelf: 'center',
   },
   recipeImage: {
-    width: 80,
-    height: 80,
+    width: 190,
+    height: 190,
   },
   recipeInfo: {
     flex: 1,
     padding: 15,
-  },
-  recipeName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: 'white',
-    marginBottom: 5,
-  },
-  recipeDate: {
-    fontSize: 14,
-    color: '#aaa',
   },
   emptyState: {
     flex: 1,
