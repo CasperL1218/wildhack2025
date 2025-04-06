@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, KeyboardAvoidingView, Platform, Pressable, Modal, Alert } from 'react-native';
+import ImageResizer from 'react-native-image-resizer';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { useState, useRef } from 'react';
 import { Ionicons } from '@expo/vector-icons';
@@ -107,6 +108,28 @@ export default function SnapScreen() {
     // Log photo info before navigating
     console.log('Image data being passed:', photos);
 
+  async function convertHEICtoJPG(photo: PhotoItem) {
+    try {
+      let jpegUri = photo.uri;
+
+      if (Platform.OS === 'ios') {
+        const resizedImage = await ImageResizer.createResizedImage(photo.uri, 800, 600, 'JPEG', 90, 0);
+        jpegUri = resizedImage.uri;
+      }
+
+      const response = await fetch(jpegUri);
+      const blob = await response.blob();
+
+      const fileName = photo.dishName ? `${photo.dishName}.jpg` : 'image.jpg';
+      const jpgFile = new File([blob], fileName, { type: 'image/jpeg' });
+
+      return jpgFile;
+    } catch (error) {
+        console.error("Error converting HEIC to JPG:", error);
+        return null;
+    }
+  }
+
     const formData = new FormData();
     for (let i = 0; i < photos.length; i++) {
       const photo = photos[i];
@@ -120,32 +143,49 @@ export default function SnapScreen() {
       }
 
       try {
-          console.log(`Photo URI at index ${i}:`, photo.uri);
-          const base64Data = photo.uri.split(',')[1];
-          console.log(`Base64 data at index ${i}:`, base64Data); // Add this line
-          const byteCharacters = atob(base64Data);
-          console.log(`Byte characters length at index ${i}:`, byteCharacters.length);
-          const byteArray = new Uint8Array(byteCharacters.length);
+        const jpgFile = await convertHEICtoJPG(photo); // Await the conversion
+    
+        if (jpgFile) {
+          formData.append('file', jpgFile); // Append the JPG File
+          console.log(`JPG file appended to formData at index ${i}`);
+        } else {
+          console.error(`HEIC to JPG conversion failed at index ${i}:`, photo);
+          Alert.alert('Error', `HEIC to JPG conversion failed at index ${i}.`);
+          return; // Stop processing if conversion fails
+        }
+      } catch (error) {
+        console.error(`Error processing photo at index ${i}:`, error);
+        Alert.alert('Error', `Failed to process photo at index ${i}.`);
+        return; // Stop processing if an error occurs
+      }
 
-          for (let j = 0; j < byteCharacters.length; j++) {
-              byteArray[j] = byteCharacters.charCodeAt(j);
-          }
+      // try {
+      //     console.log(`Photo URI at index ${i}:`, photo.uri);
+      //     const base64Data = photo.uri.split(',')[1];
+      //     console.log(`Base64 data at index ${i}:`, base64Data); // Add this line
+      //     const byteCharacters = atob(base64Data);
+      //     console.log(`Byte characters length at index ${i}:`, byteCharacters.length);
+      //     const byteArray = new Uint8Array(byteCharacters.length);
 
-          const blob = new Blob([byteArray], { type: 'image/jpeg' });
-          console.log(`Blob created at index ${i}:`, blob);
-          const file = new File([blob], photo.dishName || `image_${i}.jpg`, { type: 'image/jpeg' });
-          console.log(`File at index ${i}:`, file);
+      //     for (let j = 0; j < byteCharacters.length; j++) {
+      //         byteArray[j] = byteCharacters.charCodeAt(j);
+      //     }
 
-          formData.append('file', file); // Append each file with a unique name
-          console.log(`File appended to formData at index ${i}`);
+      //     const blob = new Blob([byteArray], { type: 'image/jpeg' });
+      //     console.log(`Blob created at index ${i}:`, blob);
+      //     const file = new File([blob], photo.dishName || `image_${i}.jpg`, { type: 'image/jpeg' });
+      //     console.log(`File at index ${i}:`, file);
+
+      //     formData.append('file', file); // Append each file with a unique name
+      //     console.log(`File appended to formData at index ${i}`);
 
           
 
-      } catch (error) {
-          console.error(`Error processing photo at index ${i}:`, error);
-          Alert.alert("Error", `Failed to process photo at index ${i}.`);
-          return; // Stop processing if there's an error
-      }
+      // } catch (error) {
+      //     console.error(`Error processing photo at index ${i}:`, error);
+      //     Alert.alert("Error", `Failed to process photo at index ${i}.`);
+      //     return; // Stop processing if there's an error
+      // }
   }
 
   formData.append('zipcode', zipCode);
@@ -160,7 +200,7 @@ export default function SnapScreen() {
       });
 
       console.log('Response from server:', response);
-      
+
       setResponse(response.data);
 
       
