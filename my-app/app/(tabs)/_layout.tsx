@@ -8,14 +8,14 @@ export default function TabLayout() {
     <PhotoProvider>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: '#007AFF',
-          tabBarInactiveTintColor: '#8E8E93',
+          tabBarActiveTintColor: '#E6E0D9',
+          tabBarInactiveTintColor: '#333D1E',
           tabBarStyle: {
-            backgroundColor: '#121212',
+            backgroundColor: '#84A24D',
             borderTopWidth: 1,
-            borderTopColor: '#333',
-            height: 85,
-            paddingBottom: 28,
+            borderTopColor: '#32401A',
+            height: 55,
+            paddingBottom: 26,
             paddingTop: 6,
             paddingHorizontal: 5,
             // Safe area for iPhone X+ models
@@ -41,26 +41,28 @@ export default function TabLayout() {
           name="index"
           options={{
             title: 'Markets',
-            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="map-marker" size={24} color={color} />,
+            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="map-marker" size={32} color={color} />,
           }}
         />
         <Tabs.Screen
           name="snap"
           options={{
             title: 'Snap',
-            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="camera" size={24} color={color} />,
+            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="camera" size={32} color={color} />,
           }}
         />
         <Tabs.Screen
           name="explore"
           options={{
-            title: 'My Recipes',
-            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="book" size={24} color={color} />,
+            headerShown: false,
+            title: 'Saved Recipes',
+            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="book" size={32} color={color} />,
           }}
         />
         <Tabs.Screen
           name="results"
           options={{
+            headerShown: false,
             headerTitle: 'Recipe Results',
             href: null,
             tabBarItemStyle: { display: 'none' }
