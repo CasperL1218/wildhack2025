@@ -156,5 +156,61 @@ def final_recipe_endpoint():
     except Exception as e:
         return jsonify({"error": str(e)})
 
+# Create a new recipe
+@app.route('/recipes', methods=['POST'])
+def create_recipe():
+    try:
+        data = request.get_json()
+        
+        # Check required fields
+        if not data or 'dishName' not in data or 'ingredients' not in data or 'recipeSteps' not in data or 'userId' not in data:
+            return jsonify({"success": False, "error": "Missing required fields: dishName, ingredients, recipeSteps, and userId"}), 400
+        
+        # Create recipe document in Firestore
+        recipe_ref = db.collection('recipes').document()
+        
+        # Set recipe data with timestamp handled separately
+        recipe_data = {
+            "dishName": data['dishName'],
+            "ingredients": data['ingredients'],
+            "recipeSteps": data['recipeSteps'],
+            "userId": data['userId'],
+        }
+        
+        # Add timestamp in Firestore but don't include in response
+        firestore_data = recipe_data.copy()
+        firestore_data["createdAt"] = firestore.SERVER_TIMESTAMP
+        recipe_ref.set(firestore_data)
+        
+        # Update user's recipe count
+        user_ref = db.collection('users').document(data['userId'])
+        user_doc = user_ref.get()
+        
+        if user_doc.exists:
+            user_data = user_doc.to_dict()
+            current_count = user_data.get('numRecipe', 0)
+            user_ref.update({"numRecipe": current_count + 1})
+        
+        return jsonify({"success": True, "data": recipe_data, "id": recipe_ref.id}), 201
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+# Get recipes by user ID
+@app.route('/recipes/user/<user_id>', methods=['GET'])
+def get_recipes_by_user(user_id):
+    try:
+        # Query recipes collection where userId matches
+        recipes_query = db.collection('recipes').where('userId', '==', user_id).stream()
+        
+        recipes = []
+        for doc in recipes_query:
+            recipe_data = doc.to_dict()
+            recipe_data['id'] = doc.id
+            recipes.append(recipe_data)
+        
+        return jsonify({"success": True, "data": recipes})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
 if __name__ == "__main__":
     app.run(debug=True)
