@@ -1,7 +1,9 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Platform } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+import { useResponseContext } from '../context/ResponseContext';
 
 type RecipeIngredient = {
   name: string;
@@ -26,6 +28,19 @@ export default function RecipeModal() {
   const params = useLocalSearchParams<{ optionType?: string }>();
   const optionType = params.optionType || 'original';
   const [viewType, setViewType] = useState<'adapted' | 'original'>(optionType === 'original' ? 'original' : 'adapted');
+  const { response } = useResponseContext();
+
+  const [r, setR] = useState<string | null>(null);
+  
+
+  useEffect(() => {
+    if (response) {
+      setR(JSON.stringify(response));
+    }
+  }, [response]);
+  
+
+
 
   // Get the header color and title based on the recipe type
   const getHeaderColorAndTitle = () => {
@@ -82,7 +97,7 @@ export default function RecipeModal() {
     foodMiles: 90,
     ingredients: [
       {
-        title: 'Section a',
+        title: 'Ingredients',
         ingredients: [
           { name: 'Ingredient 1', isAdapted: true },
           { name: 'Ingredient 2' },
@@ -90,21 +105,21 @@ export default function RecipeModal() {
         ]
       },
       {
-        title: 'Section b',
+        title: 'Recipe',
         ingredients: [
           { name: 'Ingredient 1' },
           { name: 'Ingredient 2', isAdapted: true },
           { name: 'Ingredient 3' }
         ]
       },
-      {
-        title: 'Section c',
-        ingredients: [
-          { name: 'Ingredient 1', isAdapted: true },
-          { name: 'Ingredient 2' },
-          { name: 'Ingredient 3' }
-        ]
-      }
+      // {
+      //   title: 'Section c',
+      //   ingredients: [
+      //     { name: 'Ingredient 1', isAdapted: true },
+      //     { name: 'Ingredient 2' },
+      //     { name: 'Ingredient 3' }
+      //   ]
+      // }
     ]
   };
 
@@ -176,6 +191,8 @@ export default function RecipeModal() {
               ))}
             </View>
           ))}
+
+          
 
           {/* Footer Space */}
           {/* <View style={styles.footerSpace} /> */}
@@ -270,10 +287,9 @@ export default function RecipeModal() {
 
 
         {/* Recipe Sections */}
-        {recipe.ingredients.map((section, sectionIndex) => (
-          <View key={sectionIndex} style={styles.section}>
-            <Text style={styles.sectionTitle}>{section.title}</Text>
-            {section.ingredients.map((ingredient, ingredientIndex) => (
+        
+          
+            {/* {section.ingredients.map((ingredient, ingredientIndex) => (
               <View key={ingredientIndex} style={styles.ingredientItem}>
                 <Text style={styles.bulletPoint}>•</Text>
                 <Text style={[
@@ -283,9 +299,28 @@ export default function RecipeModal() {
                   {ingredient.name}
                 </Text>
               </View>
-            ))}
-          </View>
-        ))}
+            ))} */}
+
+          {r && typeof r === 'string' && r.indexOf("ingredients") !== -1 && (
+            <Text style={[
+                    styles.ingredientText,
+                    ]}>
+              {(() => {
+                const startIndex = r.indexOf('ingredients\\\":') + 'ingredients\\\":'.length + 10;
+                const nextComma = r.indexOf(':', startIndex) - 4;
+
+                if (nextComma !== -1) {
+                  return r.substring(startIndex, nextComma).trim();
+                } else {
+                  return r.substring(startIndex).trim();
+                }
+              })()}hell
+            </Text>
+        )}
+
+            
+          
+        
 
         {/* Source Nearby for Local recipes */}
         {optionType === 'local' && (

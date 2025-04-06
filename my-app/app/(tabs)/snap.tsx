@@ -112,18 +112,20 @@ export default function SnapScreen() {
     try {
       let jpegUri = photo.uri;
 
-      if (Platform.OS === 'ios') {
-        const resizedImage = await ImageResizer.createResizedImage(photo.uri, 800, 600, 'JPEG', 90, 0);
-        jpegUri = resizedImage.uri;
-      }
 
-      const response = await fetch(jpegUri);
-      const blob = await response.blob();
+        if (Platform.OS === 'ios') {
+          const resizedImage = await ImageResizer.createResizedImage(photo.uri, 800, 600, 'JPEG', 90, 0);
+          jpegUri = resizedImage.uri;
+        }
 
-      const fileName = photo.dishName ? `${photo.dishName}.jpg` : 'image.jpg';
-      const jpgFile = new File([blob], fileName, { type: 'image/jpeg' });
+        const response = await fetch(jpegUri);
+        const blob = await response.blob();
 
-      return jpgFile;
+        const fileName = photo.dishName ? `${photo.dishName}.jpg` : 'image.jpg';
+        const jpgFile = new File([blob], fileName, { type: 'image/jpeg' });
+
+        return jpgFile;
+
     } catch (error) {
         console.error("Error converting HEIC to JPG:", error);
         return null;

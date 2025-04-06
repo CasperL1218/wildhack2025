@@ -17,6 +17,9 @@ export default function ResultsScreen() {
   const { photos } = usePhotoContext();
   const { response } = useResponseContext();
 
+  const [r, setR] = useState<string | null>(null);
+  
+
   useEffect(() => {
     // Log the received photos
     console.log('Received images in results page:', photos);
@@ -24,7 +27,7 @@ export default function ResultsScreen() {
     console.log('Received server data in results page:', response);
     // console.log('Response type:', typeof response);
     console.log('Full response:', JSON.stringify(response, null, 2));
-    const r = JSON.stringify(response)
+    setR(JSON.stringify(response));
 
 
   }, [photos, response]);
@@ -58,10 +61,40 @@ export default function ResultsScreen() {
         />
  
         <View style={styles.dishHeader}>
-          <Text style={styles.dishName}>Dish Name</Text>
+          {/* <Text style={styles.dishName}>Dish Name</Text> */}
+
+          {r && typeof r === 'string' && r.indexOf("food_name") !== -1 && (
+          <Text style={styles.dishName}>
+            {(() => {
+              const startIndex = r.indexOf('food_name') + 'food_name'.length + 10;
+              const nextComma = r.indexOf(',', startIndex) - 4;
+
+              if (nextComma !== -1) {
+                return r.substring(startIndex, nextComma).trim();
+              } else {
+                return r.substring(startIndex).trim();
+              }
+            })()}
+          </Text>
+        )}
+
         </View>
 
-        <Text style={styles.dishDescription}>15-20 word short blurb</Text>
+        {/* <Text style={styles.dishDescription}>15-20 word short blurb</Text> */}
+        {r && typeof r === 'string' && r.indexOf("description") !== -1 && (
+          <Text style={styles.dishDescription}>
+            {(() => {
+              const startIndex = r.indexOf('description') + 'description'.length + 10;
+              const nextComma = r.indexOf('\\"', startIndex) - 2;
+
+              if (nextComma !== -1) {
+                return r.substring(startIndex, nextComma).trim();
+              } else {
+                return r.substring(startIndex).trim();
+              }
+            })()}
+          </Text>
+        )}
 
         <TouchableOpacity
           style={styles.alternativeButton}
