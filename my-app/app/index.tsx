@@ -27,7 +27,10 @@ const redirectUri = AuthSession.makeRedirectUri({
 });
 
 // Log the redirect URI to configure in Auth0 dashboard
-console.log('Auth0 Redirect URI:', redirectUri);
+console.log('========== AUTH0 CONFIGURATION ==========');
+console.log('IMPORTANT: Add this exact URL to your Auth0 application Allowed Callback URLs:');
+console.log(redirectUri);
+console.log('==========================================');
 
 export default function LoginPage() {
   const { isAuthenticated, login, isLoading } = useAuth();
