@@ -102,11 +102,11 @@ export default function LoginPage() {
 
   // Login UI
   return (
+    
     <View style={styles.container}>
-      <Text style={styles.appName}>myApp</Text>
 
       <View style={styles.logoContainer}>
-        <Text style={styles.title}>Welcome</Text>
+        <Text style={styles.title}>Welcome to ClickBite!</Text>
         {/* You can add your app logo here */}
         {/* <Image source={require('../assets/logo.png')} style={styles.logo} /> */}
       </View>
@@ -127,22 +127,15 @@ export default function LoginPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#9b9e8c',
+    backgroundColor: '#84A24D',
     alignItems: 'center',
-    paddingTop: 40,
+    paddingTop: 320,
   },
   loadingContainer: {
     flex: 1,
     backgroundColor: '#9b9e8c',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  appName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 30,
-    alignSelf: 'flex-start',
-    marginLeft: 20,
   },
   logoContainer: {
     alignItems: 'center',
@@ -154,13 +147,13 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   title: {
-    fontSize: 36,
+    fontSize: 33,
     fontWeight: 'bold',
-    marginBottom: 20,
-    fontFamily: 'Nunito',
+    marginBottom: -10,
+    fontFamily: 'Baloo',
   },
   loginButton: {
-    backgroundColor: '#e8dfd5',
+    backgroundColor: '#e6e0d9',
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 25,
