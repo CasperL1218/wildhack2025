@@ -132,21 +132,21 @@ export default function RecipeModal() {
             <View style={styles.metricRow}>
               <Text style={styles.metricLabel}>CO2 Emitted</Text>
               <View style={styles.progressBarContainer}>
-                <View style={[styles.progressBar, { width: `${recipe.co2Emitted}%` }]} />
+                <View style={[styles.progressBar, { backgroundColor: tabColor }, { width: `${recipe.co2Emitted}%` }]} />
               </View>
             </View>
 
             <View style={styles.metricRow}>
               <Text style={styles.metricLabel}>Water Usage</Text>
               <View style={styles.progressBarContainer}>
-                <View style={[styles.progressBar, { width: `${recipe.waterUsage}%` }]} />
+                <View style={[styles.progressBar, { backgroundColor: tabColor }, { width: `${recipe.waterUsage}%` }]} />
               </View>
             </View>
 
             <View style={styles.metricRow}>
               <Text style={styles.metricLabel}>Food Miles</Text>
               <View style={styles.progressBarContainer}>
-                <View style={[styles.progressBar, { width: `${recipe.foodMiles}%` }]} />
+                <View style={[styles.progressBar, { backgroundColor: tabColor }, { width: `${recipe.foodMiles}%` }]} />
               </View>
             </View>
           </View>
@@ -194,21 +194,21 @@ export default function RecipeModal() {
           <View style={styles.metricRow}>
             <Text style={styles.metricLabel}>CO2 Emitted</Text>
             <View style={styles.progressBarContainer}>
-              <View style={[styles.progressBar, { width: `${recipe.co2Emitted}%` }]} />
+              <View style={[styles.progressBar, , { backgroundColor: tabColor }, { width: `${recipe.co2Emitted}%` }]} />
             </View>
           </View>
 
           <View style={styles.metricRow}>
             <Text style={styles.metricLabel}>Water Usage</Text>
             <View style={styles.progressBarContainer}>
-              <View style={[styles.progressBar, { width: `${recipe.waterUsage}%` }]} />
+              <View style={[styles.progressBar, , { backgroundColor: tabColor }, { width: `${recipe.waterUsage}%` }]} />
             </View>
           </View>
 
           <View style={styles.metricRow}>
             <Text style={styles.metricLabel}>Food Miles</Text>
             <View style={styles.progressBarContainer}>
-              <View style={[styles.progressBar, { width: `${recipe.foodMiles}%` }]} />
+              <View style={[styles.progressBar, { backgroundColor: tabColor }, { width: `${recipe.foodMiles}%` }]} />
             </View>
           </View>
         </View>
@@ -243,8 +243,10 @@ export default function RecipeModal() {
 
         {/* Note about adapted ingredients */}
         <Text style={styles.noteText}>
-          ** {viewType === 'adapted' ? (optionType === 'local' ? 'Locally' : 'Sustainably') : 'Originally'} adapted ingredients are bolded.
-        </Text>
+          {viewType === 'adapted' && (
+            `** ${optionType === 'local' ? 'Locally' : 'Sustainably'} adapted ingredients are bolded.`
+            )}
+            </Text>
 
         {/* Ingredients Header if Local */}
         {optionType === 'local' && <Text style={styles.ingredientsHeader}>Ingredients</Text>}
@@ -292,23 +294,24 @@ const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e8e4d9', // Cream background
+    backgroundColor: '#e6e0d9', // Cream background
   },
   header: {
     padding: 20,
-    paddingTop: Platform.OS === 'ios' ? 50 : 20,
+    paddingTop: Platform.OS === 'ios' ? 40 : 20,
   },
   appName: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 10,
+    fontFamily: 'Baloo',
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
     color: '#000',
     marginBottom: 15,
+    fontFamily: 'Baloo',
   },
   startButton: {
     backgroundColor: '#e8dfd5',
@@ -322,6 +325,7 @@ const styles = StyleSheet.create({
   startButtonText: {
     fontSize: 16,
     fontWeight: '600',
+    fontFamily: 'Baloo',
   },
   scrollView: {
     flex: 1,
@@ -339,6 +343,7 @@ const styles = StyleSheet.create({
     width: 120,
     fontSize: 16,
     fontWeight: '500',
+    fontFamily: 'Baloo',
   },
   progressBarContainer: {
     height: 20,
@@ -349,7 +354,6 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: '100%',
-    backgroundColor: '#92b579', // Green progress bar
   },
   tabContainer: {
     flexDirection: 'row',
@@ -369,10 +373,12 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontWeight: '500',
+    fontFamily: 'Baloo',
   },
   activeTabText: {
     color: '#fff',
     fontWeight: 'bold',
+    fontFamily: 'Baloo',
   },
   noteText: {
     marginHorizontal: 20,
@@ -396,6 +402,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 10,
     fontStyle: 'italic',
+    fontFamily: 'Baloo',
   },
   ingredientItem: {
     flexDirection: 'row',
@@ -421,6 +428,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 15,
     textDecorationLine: 'underline',
+    fontFamily: 'Baloo',
   },
   mapIconContainer: {
     flexDirection: 'row',
@@ -430,6 +438,7 @@ const styles = StyleSheet.create({
     height: 50,
   },
   footer: {
+    fontFamily: 'Baloo',
     height: 50,
     backgroundColor: '#92b579', // Green footer
     position: 'absolute',
