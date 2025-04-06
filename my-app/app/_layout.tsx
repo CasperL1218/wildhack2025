@@ -32,11 +32,12 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="recipe" options={{
-          presentation: 'transparentModal',
-          animation: 'fade',
+          presentation: 'modal',
+          animation: 'slide_from_bottom',
           headerShown: false,
           contentStyle: { backgroundColor: 'transparent' }
         }} />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
