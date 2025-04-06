@@ -1,6 +1,8 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import { Alert } from 'react-native';
 
 // Define a type for user data
 type UserProfile = {
@@ -27,6 +29,31 @@ export default function ProfileScreen() {
     achievements: ["Market Maven", "Recipe Creator", "Local Food Champion"]
   });
 
+  const [profilePhoto, setProfilePhoto] = useState<string | null>(null);  
+
+  const pickProfile = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission Required', 'Sorry, we need media library permissions.');
+        return;
+      }
+  
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+  
+      if (!result.canceled && result.assets[0].uri) {
+        setProfilePhoto(result.assets[0].uri); 
+      }
+    } catch (error) {
+        console.error('Error picking profile image:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -40,10 +67,12 @@ export default function ProfileScreen() {
 
         <View style={styles.profileSection}>
           <View style={styles.profileImageContainer}>
-            <Image
-              source={{ uri: 'https://via.placeholder.com/150' }}
-              style={styles.profileImage}
-            />
+            <TouchableOpacity onPress={pickProfile}>
+              <Image
+                source={{ uri: profilePhoto || 'https://via.placeholder.com/150' }}
+                style={styles.profileImage}
+              />
+            </TouchableOpacity>
           </View>
 
           <Text style={styles.userName}>Hi {profile.name}!</Text>
