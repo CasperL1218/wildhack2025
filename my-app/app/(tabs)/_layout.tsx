@@ -14,22 +14,14 @@ export default function TabLayout() {
             backgroundColor: '#84A24D',
             borderTopWidth: 1,
             borderTopColor: '#32401A',
-            height: 55,
-            paddingBottom: 26,
+            height: 70,
+            paddingBottom: 30,
             paddingTop: 6,
             paddingHorizontal: 5,
             // Safe area for iPhone X+ models
             ...(Platform.OS === 'ios' && {
-              safeAreaInsets: { bottom: 10 }
+              safeAreaInsets: { bottom: 15 }
             }),
-          },
-          tabBarLabelStyle: {
-            fontSize: 12,
-            fontWeight: '500',
-          },
-          tabBarLabelPosition: 'below-icon',
-          headerStyle: {
-            backgroundColor: '#121212',
           },
           headerTitleStyle: {
             fontWeight: 'bold',
@@ -40,14 +32,16 @@ export default function TabLayout() {
         <Tabs.Screen
           name="index"
           options={{
-            title: 'Markets',
+            headerShown: false,
+            title: '',
             tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="map-marker" size={32} color={color} />,
           }}
         />
         <Tabs.Screen
           name="snap"
           options={{
-            title: 'Snap',
+            headerShown: false,
+            title: '',
             tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="camera" size={32} color={color} />,
           }}
         />
@@ -55,7 +49,7 @@ export default function TabLayout() {
           name="explore"
           options={{
             headerShown: false,
-            title: 'Saved Recipes',
+            title: '',
             tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="book" size={32} color={color} />,
           }}
         />

@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#84A24D',
   },
   header: {
-    padding: 20,
-    paddingTop: 40,
+    padding: 5,
+    paddingTop: 60,
   },
   title: {
     fontSize: 28,
@@ -142,8 +142,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   recipeImage: {
-    width: 190,
-    height: 190,
+    width: 150,
+    height: 150,
   },
   recipeInfo: {
     flex: 1,
