@@ -1,8 +1,104 @@
-from flask import Flask, request, jsonify
+from flask import Flask, redirect, render_template, request, make_response, session, abort, jsonify, url_for
+import secrets
 from services import extract_text, scan_food, sustainable_recipe, seasonal_recipe, ingredient_list, final_recipe
 import json
+import firebase_admin
+from firebase_admin import credentials, firestore, auth
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY')
+
+cred = credentials.Certificate("firebase-auth.json")
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+@app.route('/users/<user_id>', methods=['GET'])
+def get_user(user_id):
+    """
+    Get user data from Firestore by user ID
+    """
+    try:
+        # Get user document from Firestore
+        user_ref = db.collection('users').document(user_id)
+        user_doc = user_ref.get()
+        
+        # Check if user exists
+        if not user_doc.exists:
+            return jsonify({
+                'status': 'error',
+                'message': f'User not found with ID: {user_id}'
+            }), 404
+            
+        # Return user data
+        user_data = user_doc.to_dict()
+        return jsonify(user_data)
+        
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Error retrieving user data: {str(e)}'
+        }), 500
+
+@app.route('/users/<user_id>', methods=['POST'])
+def create_user(user_id):
+    """
+    Create or update user data in Firestore
+    """
+    try:
+        # Validate request body
+        if not request.is_json:
+            return jsonify({
+                'status': 'error',
+                'message': 'Request must be JSON'
+            }), 400
+            
+        user_data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['userName', 'userEmail']
+        for field in required_fields:
+            if field not in user_data:
+                return jsonify({
+                    'status': 'error',
+                    'message': f'Missing required field: {field}'
+                }), 400
+        
+        # Ensure userId matches the URL parameter
+        user_data['userId'] = user_id
+        
+        # Set default values if not provided
+        if 'numRecipe' not in user_data:
+            user_data['numRecipe'] = 0
+            
+        if 'streak' not in user_data:
+            user_data['streak'] = 0
+            
+        # Add timestamps
+        user_data['updated_at'] = firestore.SERVER_TIMESTAMP
+        
+        # If this is a new user, add created_at timestamp
+        user_ref = db.collection('users').document(user_id)
+        user_doc = user_ref.get()
+        if not user_doc.exists:
+            user_data['created_at'] = firestore.SERVER_TIMESTAMP
+            
+        # Update or create user document
+        user_ref.set(user_data, merge=True)
+        
+        return jsonify({
+            'status': 'success',
+            'message': f'User data saved successfully for ID: {user_id}'
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'Error saving user data: {str(e)}'
+        }), 500
 
 @app.route('/extract-text', methods=['POST'])
 def extract_text_endpoint():
