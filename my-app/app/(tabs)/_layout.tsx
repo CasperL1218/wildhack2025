@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
+import { Platform } from 'react-native';
 
 export default function TabLayout() {
   return (
@@ -8,17 +9,39 @@ export default function TabLayout() {
         tabBarActiveTintColor: '#007AFF',
         tabBarInactiveTintColor: '#8E8E93',
         tabBarStyle: {
-          backgroundColor: '#fff',
+          backgroundColor: '#121212',
           borderTopWidth: 1,
-          borderTopColor: '#E5E5EA',
+          borderTopColor: '#333',
+          height: 85,
+          paddingBottom: 28,
+          paddingTop: 6,
+          paddingHorizontal: 5,
+          // Safe area for iPhone X+ models
+          ...(Platform.OS === 'ios' && {
+            safeAreaInsets: { bottom: 10 }
+          }),
         },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '500',
+        },
+        tabBarLabelPosition: 'below-icon',
         headerStyle: {
-          backgroundColor: '#fff',
+          backgroundColor: '#121212',
         },
         headerTitleStyle: {
           fontWeight: 'bold',
+          color: 'white',
         },
+        headerTintColor: 'white',
       }}>
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Markets',
+          tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="map-marker" size={24} color={color} />,
+        }}
+      />
       <Tabs.Screen
         name="snap"
         options={{
@@ -34,10 +57,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="results"
         options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="user" size={24} color={color} />,
+          headerTitle: 'Recipe Results',
+          href: null,
+          tabBarItemStyle: { display: 'none' }
         }}
       />
     </Tabs>

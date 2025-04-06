@@ -1,205 +1,440 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Platform } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
+
+type RecipeIngredient = {
+  name: string;
+  isAdapted?: boolean;
+};
+
+type RecipeSection = {
+  title: string;
+  ingredients: RecipeIngredient[];
+};
 
 type RecipeProps = {
   dishName: string;
-  ingredients: string[];
-  instructions: string[];
+  ingredients: RecipeSection[];
+  co2Emitted: number;
+  waterUsage: number;
+  foodMiles: number;
 };
 
 export default function RecipeModal() {
   const router = useRouter();
+  const params = useLocalSearchParams<{ optionType?: string }>();
+  const optionType = params.optionType || 'original';
+  const [viewType, setViewType] = useState<'adapted' | 'original'>(optionType === 'original' ? 'original' : 'adapted');
 
-  // This would normally come from your state management or API
-  // For now, we'll use a sample recipe
+  // Get the header color and title based on the recipe type
+  const getHeaderColorAndTitle = () => {
+    switch (optionType) {
+      case 'sustainable':
+        return {
+          backgroundColor: '#a2c4a2', // Light teal color
+          title: 'Recreate Sustainably'
+        };
+      case 'local':
+        return {
+          backgroundColor: '#9d87ba', // Purple color
+          title: 'Recreate Locally'
+        };
+      default:
+        return {
+          backgroundColor: '#e89852', // Orange color
+          title: 'Recreate Originally'
+        };
+    }
+  };
+
+  // Get the tab color based on the recipe type
+  const getTabColor = () => {
+    switch (optionType) {
+      case 'sustainable':
+        return '#a2c4a2'; // Light teal
+      case 'local':
+        return '#9d87ba'; // Purple
+      default:
+        return '#e89852'; // Orange
+    }
+  };
+
+  const getTabText = () => {
+    switch (optionType) {
+      case 'sustainable':
+        return 'Sustainably';
+      case 'local':
+        return 'Locally';
+      default:
+        return 'Originally';
+    }
+  };
+
+  // Sample recipe data - this would normally come from an API or state
   const recipe: RecipeProps = {
-    dishName: "Spaghetti Carbonara",
+    dishName: optionType === 'sustainable' ? 'Recreate Sustainably' : optionType === 'local' ? 'Recreate Locally' : 'Recreate Originally',
+    co2Emitted: 78,
+    waterUsage: 85,
+    foodMiles: 90,
     ingredients: [
-      "200g spaghetti",
-      "100g pancetta or bacon",
-      "2 large eggs",
-      "50g Parmesan cheese",
-      "50g Pecorino Romano",
-      "Black pepper",
-      "Salt"
-    ],
-    instructions: [
-      "Bring a large pot of salted water to boil and cook spaghetti according to package instructions.",
-      "Meanwhile, cut the pancetta into small cubes.",
-      "In a bowl, whisk together eggs, grated Parmesan, and Pecorino Romano.",
-      "Heat a large pan over medium heat and cook pancetta until crispy.",
-      "Drain pasta, reserving some pasta water.",
-      "Add hot pasta to the pan with pancetta and remove from heat.",
-      "Quickly stir in the egg mixture, adding pasta water as needed to create a creamy sauce.",
-      "Season with salt and plenty of black pepper.",
-      "Serve immediately with extra cheese on top."
+      {
+        title: 'Section a',
+        ingredients: [
+          { name: 'Ingredient 1', isAdapted: true },
+          { name: 'Ingredient 2' },
+          { name: 'Ingredient 3', isAdapted: true }
+        ]
+      },
+      {
+        title: 'Section b',
+        ingredients: [
+          { name: 'Ingredient 1' },
+          { name: 'Ingredient 2', isAdapted: true },
+          { name: 'Ingredient 3' }
+        ]
+      },
+      {
+        title: 'Section c',
+        ingredients: [
+          { name: 'Ingredient 1', isAdapted: true },
+          { name: 'Ingredient 2' },
+          { name: 'Ingredient 3' }
+        ]
+      }
     ]
   };
 
-  const handleSave = () => {
-    // Here you would implement the save logic
+  const handleBack = () => {
     router.back();
   };
 
-  const handleDiscard = () => {
-    router.back();
-  };
+  const { backgroundColor, title } = getHeaderColorAndTitle();
+  const tabColor = getTabColor();
+  const tabText = getTabText();
 
-  return (
-    <View style={styles.overlay}>
-      <View style={styles.modalContainer}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{recipe.dishName}</Text>
-          <Text style={styles.subtitle}>Generated Recipe</Text>
+  // If this is the original recipe, render a simpler layout
+  if (optionType === 'original') {
+    return (
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={[styles.header, { backgroundColor }]}>
+          <Text style={styles.appName}>myApp</Text>
+          <Text style={styles.title}>{title}</Text>
+          <TouchableOpacity style={styles.startButton}>
+            <Text style={styles.startButtonText}>Start Cooking!</Text>
+          </TouchableOpacity>
         </View>
 
-        <ScrollView style={styles.scrollView}>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Ingredients</Text>
-            {recipe.ingredients.map((ingredient, index) => (
-              <View key={index} style={styles.ingredientItem}>
-                <Ionicons name="checkmark-circle" size={20} color="#007AFF" />
-                <Text style={styles.ingredientText}>{ingredient}</Text>
+        {/* Content */}
+        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+          <View style={styles.metricsContainer}>
+            <View style={styles.metricRow}>
+              <Text style={styles.metricLabel}>CO2 Emitted</Text>
+              <View style={styles.progressBarContainer}>
+                <View style={[styles.progressBar, { width: `${recipe.co2Emitted}%` }]} />
               </View>
-            ))}
+            </View>
+
+            <View style={styles.metricRow}>
+              <Text style={styles.metricLabel}>Water Usage</Text>
+              <View style={styles.progressBarContainer}>
+                <View style={[styles.progressBar, { width: `${recipe.waterUsage}%` }]} />
+              </View>
+            </View>
+
+            <View style={styles.metricRow}>
+              <Text style={styles.metricLabel}>Food Miles</Text>
+              <View style={styles.progressBarContainer}>
+                <View style={[styles.progressBar, { width: `${recipe.foodMiles}%` }]} />
+              </View>
+            </View>
           </View>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Instructions</Text>
-            {recipe.instructions.map((instruction, index) => (
-              <View key={index} style={styles.instructionItem}>
-                <View style={styles.stepNumber}>
-                  <Text style={styles.stepNumberText}>{index + 1}</Text>
+          {/* Recipe Sections - directly shown without tabs or notes */}
+          {recipe.ingredients.map((section, sectionIndex) => (
+            <View key={sectionIndex} style={styles.section}>
+              <Text style={styles.sectionTitle}>{section.title}</Text>
+              {section.ingredients.map((ingredient, ingredientIndex) => (
+                <View key={ingredientIndex} style={styles.ingredientItem}>
+                  <Text style={styles.bulletPoint}>•</Text>
+                  <Text style={styles.ingredientText}>
+                    {ingredient.name}
+                  </Text>
                 </View>
-                <Text style={styles.instructionText}>{instruction}</Text>
-              </View>
-            ))}
-          </View>
+              ))}
+            </View>
+          ))}
+
+          {/* Footer Space */}
+          <View style={styles.footerSpace} />
         </ScrollView>
 
-        <View style={styles.footer}>
-          <TouchableOpacity style={styles.discardButton} onPress={handleDiscard}>
-            <Text style={styles.discardButtonText}>Discard</Text>
+        {/* Green Footer */}
+        <View style={styles.footer} />
+      </View>
+    );
+  }
+
+  // For sustainable and local recipes, use the layout with tabs
+  return (
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={[styles.header, { backgroundColor }]}>
+        <Text style={styles.appName}>myApp</Text>
+        <Text style={styles.title}>{title}</Text>
+        <TouchableOpacity style={styles.startButton}>
+          <Text style={styles.startButtonText}>Start Cooking!</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Content */}
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        <View style={styles.metricsContainer}>
+          <View style={styles.metricRow}>
+            <Text style={styles.metricLabel}>CO2 Emitted</Text>
+            <View style={styles.progressBarContainer}>
+              <View style={[styles.progressBar, { width: `${recipe.co2Emitted}%` }]} />
+            </View>
+          </View>
+
+          <View style={styles.metricRow}>
+            <Text style={styles.metricLabel}>Water Usage</Text>
+            <View style={styles.progressBarContainer}>
+              <View style={[styles.progressBar, { width: `${recipe.waterUsage}%` }]} />
+            </View>
+          </View>
+
+          <View style={styles.metricRow}>
+            <Text style={styles.metricLabel}>Food Miles</Text>
+            <View style={styles.progressBarContainer}>
+              <View style={[styles.progressBar, { width: `${recipe.foodMiles}%` }]} />
+            </View>
+          </View>
+        </View>
+
+        {/* Recipe Type Tabs */}
+        <View style={styles.tabContainer}>
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              viewType === 'adapted' ? { backgroundColor: tabColor } : null
+            ]}
+            onPress={() => setViewType('adapted')}
+          >
+            <Text style={[
+              styles.tabText,
+              viewType === 'adapted' ? styles.activeTabText : null
+            ]}>{tabText}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.saveButtonText}>Save Recipe</Text>
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              viewType === 'original' ? { backgroundColor: tabColor } : null
+            ]}
+            onPress={() => setViewType('original')}
+          >
+            <Text style={[
+              styles.tabText,
+              viewType === 'original' ? styles.activeTabText : null
+            ]}>Original</Text>
           </TouchableOpacity>
         </View>
-      </View>
+
+        {/* Note about adapted ingredients */}
+        <Text style={styles.noteText}>
+          ** {viewType === 'adapted' ? (optionType === 'local' ? 'Locally' : 'Sustainably') : 'Originally'} adapted ingredients are bolded.
+        </Text>
+
+        {/* Ingredients Header if Local */}
+        {optionType === 'local' && <Text style={styles.ingredientsHeader}>Ingredients</Text>}
+
+        {/* Recipe Sections */}
+        {recipe.ingredients.map((section, sectionIndex) => (
+          <View key={sectionIndex} style={styles.section}>
+            <Text style={styles.sectionTitle}>{section.title}</Text>
+            {section.ingredients.map((ingredient, ingredientIndex) => (
+              <View key={ingredientIndex} style={styles.ingredientItem}>
+                <Text style={styles.bulletPoint}>•</Text>
+                <Text style={[
+                  styles.ingredientText,
+                  (viewType === 'adapted' && ingredient.isAdapted) ? styles.adaptedIngredient : null
+                ]}>
+                  {ingredient.name}
+                </Text>
+              </View>
+            ))}
+          </View>
+        ))}
+
+        {/* Source Nearby for Local recipes */}
+        {optionType === 'local' && (
+          <View style={styles.sourceSection}>
+            <Text style={styles.sourceTitle}>Source Nearby</Text>
+            <View style={styles.mapIconContainer}>
+              <Ionicons name="location" size={40} color="#333" />
+            </View>
+          </View>
+        )}
+
+        {/* Footer Space */}
+        <View style={styles.footerSpace} />
+      </ScrollView>
+
+      {/* Green Footer */}
+      <View style={styles.footer} />
     </View>
   );
 }
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-  overlay: {
+  container: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContainer: {
-    width: width * 0.9,
-    height: height * 0.8,
-    backgroundColor: '#1E1E1E',
-    borderRadius: 20,
-    overflow: 'hidden',
+    backgroundColor: '#e8e4d9', // Cream background
   },
   header: {
     padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#333',
-    alignItems: 'center',
+    paddingTop: Platform.OS === 'ios' ? 50 : 20,
+  },
+  appName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
   },
   title: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 5,
+    color: '#000',
+    marginBottom: 15,
   },
-  subtitle: {
+  startButton: {
+    backgroundColor: '#e8dfd5',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginVertical: 10,
+  },
+  startButtonText: {
     fontSize: 16,
-    color: '#aaa',
+    fontWeight: '600',
   },
   scrollView: {
     flex: 1,
   },
-  section: {
-    padding: 20,
+  metricsContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+  },
+  metricRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  metricLabel: {
+    width: 120,
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  progressBarContainer: {
+    height: 20,
+    backgroundColor: '#d9d9d9',
+    borderRadius: 5,
+    flex: 1,
+    overflow: 'hidden',
+  },
+  progressBar: {
+    height: '100%',
+    backgroundColor: '#92b579', // Green progress bar
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    marginHorizontal: 20,
+    marginVertical: 15,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#f0f0f0',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  tabText: {
+    fontWeight: '500',
+  },
+  activeTabText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  noteText: {
+    marginHorizontal: 20,
+    marginTop: 5,
+    marginBottom: 20,
+    fontStyle: 'italic',
+    fontSize: 14,
+  },
+  ingredientsHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginHorizontal: 20,
     marginBottom: 10,
+  },
+  section: {
+    marginHorizontal: 20,
+    marginBottom: 20,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: 'white',
-    marginBottom: 15,
+    marginBottom: 10,
+    fontStyle: 'italic',
   },
   ingredientItem: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
+    paddingLeft: 5,
+  },
+  bulletPoint: {
+    marginRight: 10,
+    fontSize: 18,
   },
   ingredientText: {
-    color: 'white',
     fontSize: 16,
-    marginLeft: 10,
   },
-  instructionItem: {
-    flexDirection: 'row',
-    marginBottom: 15,
-  },
-  stepNumber: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#007AFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  stepNumberText: {
-    color: 'white',
+  adaptedIngredient: {
     fontWeight: 'bold',
-    fontSize: 14,
   },
-  instructionText: {
-    color: 'white',
-    fontSize: 16,
-    flex: 1,
+  sourceSection: {
+    marginHorizontal: 20,
+    marginVertical: 15,
+  },
+  sourceTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textDecorationLine: 'underline',
+  },
+  mapIconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  footerSpace: {
+    height: 50,
   },
   footer: {
-    flexDirection: 'row',
-    padding: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#333',
-    justifyContent: 'space-between',
-  },
-  saveButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 10,
-    padding: 15,
-    flex: 1,
-    marginLeft: 10,
-    alignItems: 'center',
-  },
-  saveButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  discardButton: {
-    backgroundColor: '#333',
-    borderRadius: 10,
-    padding: 15,
-    flex: 1,
-    marginRight: 10,
-    alignItems: 'center',
-  },
-  discardButtonText: {
-    color: '#FF3B30',
-    fontSize: 16,
-    fontWeight: '600',
-  },
+    height: 50,
+    backgroundColor: '#92b579', // Green footer
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  }
 }); 
