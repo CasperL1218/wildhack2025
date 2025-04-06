@@ -37,14 +37,21 @@ export default function MyRecipesScreen() {
     },
   ];
 
+  const num_recipes = 40 // change to db call of length(recipes)
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Saved Recipes</Text>
+        <Image
+                source={require('../../assets/images/replatelogo1.png')} // Make sure the logo path is correct
+                style={styles.logo}
+              />
+        <Text style={styles.appName}>RePlate</Text>
       </View>
+      <Text style={styles.title}>Saved Recipes</Text>
       <View style={styles.subtitle}>
-        <Text style={styles.description}>xx week streaks</Text>
-        <Text style={styles.description}>xx recipes saved</Text>
+        {/* <Text style={styles.description}>xx week streak</Text> */}
+        <Text style={styles.description}>{ num_recipes } recipes saved</Text>
       </View>
       {/* <TouchableOpacity
         style={styles.resumeButton}
@@ -83,8 +90,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#84A24D',
   },
   header: {
-    padding: 5,
-    paddingTop: 70,
+    flexDirection: 'row', // Align logo and title horizontally
+    alignItems: 'center', // Vertically center them
+    margin: 20, // Add some spacing below the header
+  },
+  appName: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    fontFamily: "Baloo",
+    color: 'black',
+    marginTop: 15,
+  },
+  logo: {
+    width: 50, // Adjust width as per your logo size
+    height: 40, // Adjust height as per your logo size
+    paddingRight: 5,
   },
   title: {
     fontSize: 40,
@@ -97,8 +117,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 20,
-    fontWeight: 'bold',
-    fontFamily: 'Baloo',
+    fontFamily: 'Nunito',
     color: 'black',
     textAlign: 'center',
     marginBottom: -5,
@@ -128,8 +147,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   recipeImage: {
-    width: 150,
-    height: 150,
+    width: 175,
+    height: 175,
   },
   recipeInfo: {
     flex: 1,
