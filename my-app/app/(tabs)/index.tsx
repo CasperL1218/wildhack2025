@@ -31,7 +31,11 @@ export default function ProfileScreen() {
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
-          <Text style={styles.title}>myApp</Text>
+          <Image
+              source={require('../../assets/images/replatelogo1.png')} // Make sure the logo path is correct
+              style={styles.logo}
+            />
+          <Text style={styles.title}>RePlate</Text>
         </View>
 
         <View style={styles.profileSection}>
@@ -78,17 +82,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#84a24d', 
+    padding: 20,
   },
   header: {
-    padding: 20,
-    paddingTop: 40,
+    flexDirection: 'row', // Align logo and title horizontally
+    alignItems: 'center', // Vertically center them
+    marginBottom: 20, // Add some spacing below the header
+  },
+  logo: {
+    width: 50, // Adjust width as per your logo size
+    height: 40, // Adjust height as per your logo size
+    paddingRight: 5,
   },
   title: {
-    fontSize: 28,
+    fontSize: 25,
     fontWeight: 'bold',
     fontFamily: "Baloo",
     color: 'black',
-    marginBottom: 5,
+    marginTop: 15,
   },
   profileSection: {
     alignItems: 'center',
