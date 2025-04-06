@@ -415,6 +415,7 @@ const styles = StyleSheet.create({
   },
   ingredientText: {
     fontSize: 16,
+    fontFamily: 'Nunito',
   },
   adaptedIngredient: {
     fontWeight: 'bold',
@@ -439,8 +440,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     fontFamily: 'Baloo',
-    height: 50,
-    backgroundColor: '#92b579', // Green footer
+    height: 70,
+    backgroundColor: '#84a24d', // Green footer
     position: 'absolute',
     bottom: 0,
     left: 0,
