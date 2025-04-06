@@ -68,6 +68,44 @@ def create_user():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
+# Fetch or create user by ID
+@app.route('/users/fetch/<user_id>', methods=['POST'])
+def fetch_user(user_id):
+    try:
+        # Check if user exists
+        user_doc = db.collection('users').document(user_id).get()
+        
+        if user_doc.exists:
+            # User exists, return user data
+            user_data = user_doc.to_dict()
+            return jsonify({"success": True, "data": user_data, "existing": True})
+        else:
+            # User doesn't exist, create new user
+            data = request.get_json() or {}
+            
+            # Check required fields for new user
+            if 'userEmail' not in data or 'userName' not in data:
+                return jsonify({"success": False, "error": "Missing required fields for new user: userEmail and userName"}), 400
+            
+            # Create user document in Firestore
+            user_ref = db.collection('users').document(user_id)
+            
+            # Set user data
+            user_data = {
+                "userId": user_id,
+                "userEmail": data['userEmail'],
+                "userName": data['userName'],
+                "numRecipe": 0,
+                "streak": 0
+                # Add other default fields as needed
+            }
+            
+            user_ref.set(user_data)
+            
+            return jsonify({"success": True, "data": user_data, "existing": False}), 201
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
 @app.route('/extract-text', methods=['POST'])
 def extract_text_endpoint():
     if 'file' not in request.files:
@@ -166,6 +204,14 @@ def create_recipe():
         if not data or 'dishName' not in data or 'ingredients' not in data or 'recipeSteps' not in data or 'userId' not in data:
             return jsonify({"success": False, "error": "Missing required fields: dishName, ingredients, recipeSteps, and userId"}), 400
         
+        user_id = data['userId']
+        # Check if user exists
+        user_ref = db.collection('users').document(user_id)
+        user_doc = user_ref.get()
+        
+        if not user_doc.exists:
+            return jsonify({"success": False, "error": f"User with ID {user_id} does not exist. Please create the user first."}), 404
+        
         # Create recipe document in Firestore
         recipe_ref = db.collection('recipes').document()
         
@@ -183,13 +229,9 @@ def create_recipe():
         recipe_ref.set(firestore_data)
         
         # Update user's recipe count
-        user_ref = db.collection('users').document(data['userId'])
-        user_doc = user_ref.get()
-        
-        if user_doc.exists:
-            user_data = user_doc.to_dict()
-            current_count = user_data.get('numRecipe', 0)
-            user_ref.update({"numRecipe": current_count + 1})
+        user_data = user_doc.to_dict()
+        current_count = user_data.get('numRecipe', 0)
+        user_ref.update({"numRecipe": current_count + 1})
         
         return jsonify({"success": True, "data": recipe_data, "id": recipe_ref.id}), 201
     except Exception as e:
