@@ -34,13 +34,13 @@ export default function RecipeModal() {
         return {
           backgroundColor: '#8dc8c8', // Light teal color
           title: 'Green Warrior',
-          subtitle: 'Recreate your dish using local ingredients.'
+          subtitle: 'Reimagine your dish optimizing sustainabililty.'
         };
       case 'local':
         return {
           backgroundColor: '#9376b4', // Purple color
           title: 'Local Lover',
-          subtitle: 'Recreate your dish using local ingredients.'
+          subtitle: 'Reimagine your dish using local produce.'
         };
       default:
         return {
@@ -122,7 +122,7 @@ export default function RecipeModal() {
       <View style={styles.container}>
         {/* Header */}
         <View style={[styles.header, { backgroundColor }]}>
-          <Text style={styles.appName}>myApp</Text>
+          {/* <Text style={styles.appName}>RePlate</Text> */}
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subtitle}>{subtitle}</Text>
           <TouchableOpacity style={styles.startButton}>
@@ -185,7 +185,7 @@ export default function RecipeModal() {
     <View style={styles.container}>
       {/* Header */}
       <View style={[styles.header, { backgroundColor }]}>
-        <Text style={styles.appName}>myApp</Text>
+        {/* <Text style={styles.appName}>RePlate</Text> */}
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.subtitle}>{subtitle}</Text>
         <TouchableOpacity style={styles.startButton}>
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: 'black',
     marginBottom: 10,
     fontFamily: 'Baloo',
   },

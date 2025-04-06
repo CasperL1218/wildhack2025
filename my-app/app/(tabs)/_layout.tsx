@@ -14,10 +14,8 @@ export default function TabLayout() {
             backgroundColor: '#84A24D',
             borderTopWidth: 1,
             borderTopColor: '#32401A',
-            height: 70,
+            height: 80,
             paddingBottom: 30,
-            height: 70,
-            paddingBottom: 26,
             paddingTop: 6,
             paddingHorizontal: 5,
             // Safe area for iPhone X+ models
@@ -36,7 +34,7 @@ export default function TabLayout() {
           options={{
             headerShown: false,
             title: '',
-            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="cutlery" size={32} color={color} />,
+            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="cutlery" size={28} color={color} />,
           }}
         />
         <Tabs.Screen
@@ -44,7 +42,7 @@ export default function TabLayout() {
           options={{
             headerShown: false,
             title: '',
-            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="plus-circle" size={32} color={color} />,
+            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="plus-circle" size={28} color={color} />,
           }}
         />
         <Tabs.Screen
@@ -52,7 +50,7 @@ export default function TabLayout() {
           options={{
             headerShown: false,
             title: '',
-            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="user" size={32} color={color} />,
+            tabBarIcon: ({ color }: { color: string }) => <FontAwesome name="user" size={28} color={color} />,
           }}
         />
         <Tabs.Screen

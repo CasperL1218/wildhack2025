@@ -117,13 +117,13 @@ export default function SnapScreen() {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.header}>
-            <Text style={styles.title}>New Recipe?</Text>
-            <Text style={styles.subtitle}>Take or upload photos of your dish to recreate it!</Text>
+            <Text style={styles.title}>Recreate a Plate?</Text>
+            <Text style={styles.subtitle}>Take or upload photos of your dish to recreate its recipe!</Text>
           </View>
 
           {/* ZIP Code Input */}
 
-          <Text style={styles.zipTitle}>Source local ingredients, enter ZIP: </Text>
+          <Text style={styles.zipTitle}>To source local ingredients, enter ZIP: </Text>
 
           <TouchableOpacity
             style={styles.zipContainer}
@@ -202,7 +202,7 @@ export default function SnapScreen() {
             style={styles.generateButton}
             onPress={generateWithPhotos}
           >
-            <Text style={styles.generateButtonText}>Recreate Recipe</Text>
+            <Text style={styles.generateButtonText}>Recreate Plate</Text>
           </TouchableOpacity>
 
           {/* Upload Modal */}
@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 40,
-    paddingTop: 120,
+    paddingTop: 220,
   },
   header: {
     marginTop: 30,
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
   uploadPhotoButton: {
     backgroundColor: '#e6e0d9',
     borderRadius: 25,
-    padding: 20,
+    padding: 15,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
