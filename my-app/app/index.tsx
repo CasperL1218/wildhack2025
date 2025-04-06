@@ -1,18 +1,51 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import { Link, router } from 'expo-router';
+import { useState } from 'react';
 
 export default function LandingPage() {
+  const [zipCode, setZipCode] = useState('60201');
+  const [editingZip, setEditingZip] = useState(false);
+
+  const handleImageUpload = () => {
+    router.push('/(tabs)/snap');
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Welcome to Our App</Text>
-        <Text style={styles.subtitle}>Your journey starts here</Text>
-        <Link href="/(tabs)" asChild>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Get Started</Text>
-          </TouchableOpacity>
-        </Link>
-      </View>
+      <Text style={styles.appName}>myApp</Text>
+
+      <Text style={styles.title}>Hi USER!</Text>
+
+      <TouchableOpacity
+        style={styles.zipContainer}
+        onPress={() => setEditingZip(true)}
+        activeOpacity={0.8}
+      >
+        {editingZip ? (
+          <TextInput
+            style={styles.zipInput}
+            value={zipCode}
+            onChangeText={setZipCode}
+            keyboardType="numeric"
+            autoFocus
+            onBlur={() => setEditingZip(false)}
+            maxLength={5}
+            placeholder="Enter ZIP Code"
+          />
+        ) : (
+          <Text style={styles.zipText}>Your ZIP Code: {zipCode}</Text>
+        )}
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.uploadButton} onPress={handleImageUpload}>
+        <Text style={styles.uploadButtonText}>+ Upload Image / Take Photo</Text>
+      </TouchableOpacity>
+
+      <Link href="/(tabs)" asChild>
+        <TouchableOpacity style={styles.startButton}>
+          <Text style={styles.startButtonText}>Start</Text>
+        </TouchableOpacity>
+      </Link>
     </View>
   );
 }
@@ -20,40 +53,63 @@ export default function LandingPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#9b9e8c',
     alignItems: 'center',
-    padding: 20,
+    paddingTop: 40,
+  },
+  appName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 30,
+    alignSelf: 'flex-start',
+    marginLeft: 20,
   },
   title: {
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#666',
     marginBottom: 30,
-    textAlign: 'center',
   },
-  button: {
-    backgroundColor: '#007AFF',
-    paddingHorizontal: 30,
-    paddingVertical: 15,
+  zipContainer: {
+    backgroundColor: '#e8dfd5',
+    paddingVertical: 20,
+    paddingHorizontal: 40,
     borderRadius: 25,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    marginBottom: 20,
+    width: '80%',
+    alignItems: 'center',
   },
-  buttonText: {
-    color: '#fff',
+  zipText: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '500',
+  },
+  zipInput: {
+    fontSize: 18,
+    fontWeight: '500',
+    textAlign: 'center',
+    width: '100%',
+  },
+  uploadButton: {
+    backgroundColor: '#e8dfd5',
+    paddingVertical: 20,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+    marginTop: 20,
+    width: '80%',
+    alignItems: 'center',
+  },
+  uploadButtonText: {
+    fontSize: 18,
+    fontWeight: '500',
+  },
+  startButton: {
+    backgroundColor: '#e8dfd5',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+    marginTop: 40,
+  },
+  startButtonText: {
+    fontSize: 18,
+    fontWeight: '500',
   },
 }); 

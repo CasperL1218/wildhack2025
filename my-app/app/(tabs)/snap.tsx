@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, KeyboardAvoidingView, Platform, Pressable, Modal, Alert } from 'react-native';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { useState, useRef } from 'react';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,6 +21,9 @@ export default function SnapScreen() {
   const [showCamera, setShowCamera] = useState<boolean>(false);
   const [showGallery, setShowGallery] = useState<boolean>(false);
   const [pressedPhotoIndex, setPressedPhotoIndex] = useState<number | null>(null);
+  const [zipCode, setZipCode] = useState<string>('60201');
+  const [showUploadModal, setShowUploadModal] = useState<boolean>(false);
+  const [editingZip, setEditingZip] = useState<boolean>(false);
   const cameraRef = useRef<CameraView>(null);
 
   // Request permissions
@@ -78,14 +81,32 @@ export default function SnapScreen() {
 
   // Handle adding a new photo
   const addNewPhoto = () => {
-    setShowCamera(true);
+    setShowUploadModal(true);
   };
 
   // Handle generating with the photos
-  const generateWithPhotos = async () => {
+  const generateWithPhotos = () => {
+    if (photos.length === 0) {
+      // Show toast message if no photos
+      try {
+        Alert.alert("No photos", "Please snap your meal first!");
+      } catch (error) {
+        console.error("Alert error:", error);
+      }
+      return;
+    }
+
+    // Navigate to results tab instead of modal
+    router.push('/(tabs)/results');
+
+    // Original API call code (commented out)
+    /*
     try {
       // Build the API URL (replace with your actual API endpoint)
       let apiUrl = 'https://api.example.com/analyze-food?';
+
+      // Add zip code to the URL
+      apiUrl += `zipCode=${encodeURIComponent(zipCode)}&`;
 
       // Add dish name to the URL if available
       if (dishName.trim()) {
@@ -123,6 +144,7 @@ export default function SnapScreen() {
       // You might want to show an error message to the user here
       alert('Failed to process your photos. Please try again.');
     }
+    */
   };
 
   // Main landing page
@@ -137,6 +159,29 @@ export default function SnapScreen() {
             <Text style={styles.title}>Food Recognition</Text>
             <Text style={styles.subtitle}>Take or upload photos of your food</Text>
           </View>
+
+          {/* ZIP Code Input */}
+          <TouchableOpacity
+            style={styles.zipContainer}
+            onPress={() => setEditingZip(true)}
+            activeOpacity={0.8}
+          >
+            {editingZip ? (
+              <TextInput
+                style={styles.zipInput}
+                value={zipCode}
+                onChangeText={setZipCode}
+                keyboardType="numeric"
+                autoFocus
+                onBlur={() => setEditingZip(false)}
+                maxLength={5}
+                placeholder="Enter ZIP Code"
+                placeholderTextColor="#999"
+              />
+            ) : (
+              <Text style={styles.zipText}>Your ZIP Code: {zipCode}</Text>
+            )}
+          </TouchableOpacity>
 
           {photos.length > 0 && (
             <View style={styles.photosContainer}>
@@ -164,26 +209,13 @@ export default function SnapScreen() {
             </View>
           )}
 
-          <View style={styles.optionsContainer}>
-            <TouchableOpacity
-              style={styles.optionButton}
-              onPress={() => {
-                requestPermissions();
-                setShowCamera(true);
-              }}
-            >
-              <Ionicons name="camera" size={32} color="white" />
-              <Text style={styles.optionText}>Take Photo</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.optionButton}
-              onPress={() => setShowGallery(true)}
-            >
-              <Ionicons name="images" size={32} color="white" />
-              <Text style={styles.optionText}>Upload from Gallery</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            style={styles.uploadPhotoButton}
+            onPress={addNewPhoto}
+          >
+            <Ionicons name="camera" size={32} color="white" />
+            <Text style={styles.uploadPhotoText}>+ Upload Image / Take Photo</Text>
+          </TouchableOpacity>
 
           {photos.length > 0 && (
             <View style={styles.dishNameContainer}>
@@ -198,14 +230,57 @@ export default function SnapScreen() {
             </View>
           )}
 
-          {photos.length > 0 && (
-            <TouchableOpacity
-              style={styles.generateButton}
-              onPress={generateWithPhotos}
-            >
-              <Text style={styles.generateButtonText}>Generate</Text>
-            </TouchableOpacity>
-          )}
+          {/* Always show generate button */}
+          <TouchableOpacity
+            style={styles.generateButton}
+            onPress={generateWithPhotos}
+          >
+            <Text style={styles.generateButtonText}>Generate</Text>
+          </TouchableOpacity>
+
+          {/* Upload Modal */}
+          <Modal
+            visible={showUploadModal}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setShowUploadModal(false)}
+          >
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Choose an Option</Text>
+
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={() => {
+                    setShowUploadModal(false);
+                    requestPermissions();
+                    setShowCamera(true);
+                  }}
+                >
+                  <Ionicons name="camera" size={24} color="white" style={styles.modalIcon} />
+                  <Text style={styles.modalButtonText}>Take Photo</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={() => {
+                    setShowUploadModal(false);
+                    setShowGallery(true);
+                  }}
+                >
+                  <Ionicons name="images" size={24} color="white" style={styles.modalIcon} />
+                  <Text style={styles.modalButtonText}>Upload from Gallery</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.cancelButton]}
+                  onPress={() => setShowUploadModal(false)}
+                >
+                  <Text style={styles.cancelButtonText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </ScrollView>
       </KeyboardAvoidingView>
     );
@@ -317,8 +392,29 @@ const styles = StyleSheet.create({
     color: '#aaa',
     textAlign: 'center',
   },
+  zipContainer: {
+    backgroundColor: '#333',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  zipText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  zipInput: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '500',
+    textAlign: 'center',
+    width: '100%',
+    paddingVertical: 5,
+  },
   photosContainer: {
-    marginBottom: 30,
+    marginBottom: 25,
   },
   sectionTitle: {
     fontSize: 18,
@@ -343,28 +439,23 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 12,
   },
-  optionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 30,
-  },
-  optionButton: {
+  uploadPhotoButton: {
     backgroundColor: '#333',
     borderRadius: 15,
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '48%',
-    height: 120,
+    flexDirection: 'row',
+    marginBottom: 25,
   },
-  optionText: {
+  uploadPhotoText: {
     color: 'white',
-    marginTop: 10,
+    marginLeft: 15,
     fontSize: 16,
     fontWeight: '500',
   },
   dishNameContainer: {
-    marginBottom: 30,
+    marginBottom: 25,
   },
   input: {
     backgroundColor: '#333',
@@ -509,5 +600,53 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E1E1E',
     borderRadius: 12,
     padding: 2,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#222',
+    borderRadius: 15,
+    padding: 20,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  modalButton: {
+    backgroundColor: '#333',
+    borderRadius: 10,
+    padding: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 15,
+  },
+  modalIcon: {
+    marginRight: 15,
+  },
+  modalButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  cancelButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#666',
+  },
+  cancelButtonText: {
+    color: '#ff6b6b',
+    fontSize: 16,
+    fontWeight: '500',
+    textAlign: 'center',
+    width: '100%',
   },
 });
