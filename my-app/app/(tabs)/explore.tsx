@@ -42,7 +42,16 @@ export default function MyRecipesScreen() {
       <View style={styles.header}>
         <Text style={styles.title}>Saved Recipes</Text>
       </View>
-
+      <View style={styles.subtitle}>
+        <Text style={styles.description}>xx week streaks</Text>
+        <Text style={styles.description}>xx recipes saved</Text>
+      </View>
+      {/* <TouchableOpacity
+        style={styles.resumeButton}
+        onPress={() => setShowAlternativeInput(!showAlternativeInput)}
+      >
+        <Text style={styles.resumeButtonText}>Resume Recipe</Text>
+      </TouchableOpacity> */}
       {recipes.length > 0 ? (
         <ScrollView style={styles.scrollView}>
           <View style={styles.gridContainer}>
@@ -71,7 +80,7 @@ export default function MyRecipesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
+    backgroundColor: '#84A24D',
   },
   header: {
     padding: 20,
@@ -80,14 +89,34 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 5,
+    fontFamily: 'Baloo',
+    color: 'black',
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: 16,
-    color: '#aaa',
   },
+  description: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    fontFamily: 'Baloo',
+    color: 'black',
+    textAlign: 'center',
+  },
+  // resumeButton: {
+  //   backgroundColor: '#e6e0d9',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 20,
+  //   borderRadius: 25,
+  //   alignItems: 'center',
+  //   alignSelf: 'center',
+  //   marginBottom: 10,
+  // },
+  // resumeButtonText: {
+  //   fontSize: 15,
+  //   fontWeight: 'bold',
+  //   color: 'black',
+  //   textAlign: 'center',
+  // },
   scrollView: {
     flex: 1,
     padding: 20,
@@ -101,8 +130,7 @@ const styles = StyleSheet.create({
     height: 200,
     padding: 5,
     aspectRatio: 1,
-    // borderColor: 'red',
-    // borderWidth: 2,
+    marginBottom: 20,
   },
   recipeCard: {
     flexDirection: 'row',

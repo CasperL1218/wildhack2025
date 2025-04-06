@@ -38,6 +38,16 @@ export default function ResultsScreen() {
       <Text style={styles.appName}>myApp</Text>
 
       <ImageBackground source={{ uri: photos[0].uri }}>
+        <View
+          style={{
+            position: 'absolute', 
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(230, 224, 217, 0.6)', 
+          }}
+        />
         <View style={styles.dishHeader}>
           <Text style={styles.dishName}>Dish Name</Text>
         </View>
@@ -50,6 +60,7 @@ export default function ResultsScreen() {
         >
           <Text style={styles.alternativeButtonText}>Something else?</Text>
         </TouchableOpacity>
+        
       </ImageBackground>
       <Text style={styles.subtitle}>Choose your own route!</Text>
 
@@ -59,7 +70,7 @@ export default function ResultsScreen() {
           onPress={() => handleOptionPress('original')}
           activeOpacity={0.7}
         >
-          <View style={[styles.optionCircle, { backgroundColor: '#e89852' }]} />
+          <View style={[styles.optionCircle, { backgroundColor: '#e18e2b' }]} />
           <View style={styles.optionTextContainer}>
             <Text style={styles.optionTitle}>
               <Text>The <Text style={styles.underline}>OG</Text></Text>
@@ -73,7 +84,7 @@ export default function ResultsScreen() {
           onPress={() => handleOptionPress('sustainable')}
           activeOpacity={0.7}
         >
-          <View style={[styles.optionCircle, { backgroundColor: '#5f9e9f' }]} />
+          <View style={[styles.optionCircle, { backgroundColor: '#8dc8c8'}]} />
           <View style={styles.optionTextContainer}>
             <Text style={styles.optionTitle}>
             <Text style={styles.underline}>Green</Text> Warrior
@@ -87,7 +98,7 @@ export default function ResultsScreen() {
           onPress={() => handleOptionPress('local')}
           activeOpacity={0.7}
         >
-          <View style={[styles.optionCircle, { backgroundColor: '#686f98' }]} />
+          <View style={[styles.optionCircle, { backgroundColor: '#9376b4' }]} />
           <View style={styles.optionTextContainer}>
             <Text style={styles.optionTitle}>
             <Text style={styles.underline}>Local</Text> Lover 
@@ -109,6 +120,7 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: 18,
     fontWeight: 'bold',
+    fontFamily: 'Baloo',
     marginBottom: 20,
   },
   dishHeader: {
@@ -118,39 +130,40 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   dishName: {
+    marginTop: 5,
+    marginLeft: 10,
     fontSize: 36,
     fontWeight: 'bold',
-  },
-  profileCircle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
+    fontFamily: 'Baloo',
   },
   dishDescription: {
-    fontSize: 18,
-    marginBottom: 20,
+    fontSize: 15,
+    fontWeight: 'bold',
+    fontFamily: 'Nunito',
+    marginLeft: 10,
+    marginBottom: 10,
   },
   alternativeButton: {
     backgroundColor: '#84A24D',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
     borderRadius: 25,
     alignItems: 'center',
     alignSelf: 'center',
     marginRight: -650,
-    marginBottom: 30,
+    marginBottom: 10,
   },
   alternativeButtonText: {
     fontSize: 16,
     fontWeight: '500',
+    fontFamily: 'Baloo',
   },
   subtitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 30,
+    fontFamily: 'Baloo',
+    marginTop: 15,
+    marginBottom: 5,
     textAlign: 'center',
   },
   optionsScrollView: {
@@ -173,12 +186,13 @@ const styles = StyleSheet.create({
   optionTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 5,
+    fontFamily: 'Baloo',
   },
   underline: {
     textDecorationLine: 'underline',
   },
   emissionsText: {
-    fontSize: 18,
+    fontSize: 15,
+    fontFamily: 'Nunito',
   },
 }); 
