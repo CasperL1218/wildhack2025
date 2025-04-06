@@ -279,8 +279,20 @@ export default function RecipeModal() {
         {optionType === 'local' && (
           <View style={styles.sourceSection}>
             <Text style={styles.sourceTitle}>Source Nearby</Text>
-            <View style={styles.mapIconContainer}>
+            {/* <View style={styles.mapIconContainer}>
               <Ionicons name="location" size={40} color="#333" />
+            </View> */}
+            <View style={styles.mapContainer}>
+              <Text>Map Container</Text>
+              {/* <MapView
+                style={styles.map}
+                initialRegion={{
+                  latitude: 37.78825, // placeholder
+                  longitude: -122.4324,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                }}
+              /> */}
             </View>
           </View>
         )}
@@ -443,9 +455,11 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     fontFamily: 'Baloo',
   },
-  mapIconContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  mapContainer: {
+    borderColor: "red",
+    borderWidth: 2,
+    height: 250,
+    marginBottom: 35,
   },
   // footerSpace: {
   //   height: 50,
