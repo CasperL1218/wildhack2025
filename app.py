@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, redirect, render_template, make_response, session, abort, url_for
+from flask_cors import CORS  # Import CORS
 from services import extract_text, scan_food, sustainable_recipe, seasonal_recipe, ingredient_list, final_recipe
 import json
 import secrets
@@ -25,61 +26,7 @@ def handle_options(path):
     response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
     return response
 
-cred = credentials.Certificate("firebase-auth.json")
-firebase_admin.initialize_app(cred)
-db = firestore.client()
-
-# Get user data by userId
-@app.route('/users/<user_id>', methods=['GET'])
-def get_user(user_id):
-    try:
-        # Get user document from Firestore
-        user_doc = db.collection('users').document(user_id).get()
-        
-        if user_doc.exists:
-            user_data = user_doc.to_dict()
-            return jsonify({"success": True, "data": user_data})
-        else:
-            return jsonify({"success": False, "error": "User not found"}), 404
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
-
-# Create a new user
-@app.route('/users', methods=['POST'])
-def create_user():
-    try:
-        data = request.get_json()
-        
-        # Check required fields
-        if not data or 'userId' not in data or 'userEmail' not in data or 'userName' not in data:
-            return jsonify({"success": False, "error": "Missing required fields: userId, userEmail, and userName"}), 400
-        
-        user_id = data['userId']
-        email = data['userEmail']
-        name = data['userName']
-        
-        # Create user document in Firestore
-        user_ref = db.collection('users').document(user_id)
-        
-        # Check if user already exists
-        if user_ref.get().exists:
-            return jsonify({"success": False, "error": "User ID already exists"}), 409
-        
-        # Set user data
-        user_data = {
-            "userId": user_id,
-            "userEmail": email,
-            "userName": name,
-            "numRecipe": 0,
-            "streak": 0
-            # Add other default fields as needed
-        }
-        
-        user_ref.set(user_data)
-        
-        return jsonify({"success": True, "data": user_data}), 201
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
+CORS(app)
 
 # Fetch or create user by ID
 @app.route('/users/fetch/<user_id>', methods=['POST'])

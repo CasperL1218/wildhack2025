@@ -3,8 +3,12 @@ import { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
+<<<<<<< HEAD
 import { useAuth } from '../../context/AuthContext';
 import { router } from 'expo-router';
+=======
+import { useRouter, useLocalSearchParams } from 'expo-router';
+>>>>>>> 7579ee1b39ce557d39554c11e483639cc686c2ed
 
 // Define a type for user data
 type UserProfile = {
@@ -151,6 +155,7 @@ export default function ProfileScreen() {
 
   const pickProfile = async () => {
     try {
+
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
         Alert.alert('Permission Required', 'Sorry, we need media library permissions.');
@@ -172,10 +177,19 @@ export default function ProfileScreen() {
     }
   };
 
+  const router = useRouter();
+  const routesPress = (optionType: string) => {
+    router.push({
+      pathname: '/explore'
+    });
+  };
+
   return (
     <View style={styles.container}>
+
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
+
+      <View style={styles.header}>
           <Image
             source={require('../../assets/images/replatelogo1.png')} // Make sure the logo path is correct
             style={styles.logo}
@@ -188,7 +202,7 @@ export default function ProfileScreen() {
             <Text style={styles.logoutButtonText}>Logout</Text>
           </TouchableOpacity>
         </View>
-
+      
         <View style={styles.profileSection}>
           <View style={styles.profileImageContainer}>
             <TouchableOpacity onPress={pickProfile}>
@@ -238,12 +252,12 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.actionsContainer}>
-          <TouchableOpacity style={styles.actionButton}>
+          {/* <TouchableOpacity style={styles.actionButton}>
             <Ionicons name="settings-outline" size={16} color="black" />
             <Text style={styles.buttonText}>Edit Profile</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
-          <TouchableOpacity style={[styles.actionButton, styles.mapButton]}>
+          <TouchableOpacity style={[styles.actionButton, styles.mapButton]} onPress={() => routesPress('run')}>
             <Ionicons name="map-outline" size={16} color="black" />
             <Text style={styles.buttonText}>My Routes</Text>
           </TouchableOpacity>
@@ -263,7 +277,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row', // Align logo and title horizontally
     alignItems: 'center', // Vertically center them
     marginBottom: 20, // Add some spacing below the header
+<<<<<<< HEAD
     justifyContent: 'space-between', // Space elements evenly
+=======
+    marginTop: 10,
+>>>>>>> 7579ee1b39ce557d39554c11e483639cc686c2ed
   },
   logo: {
     width: 50, // Adjust width as per your logo size
@@ -358,7 +376,16 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginBottom: 100,
   },
-  actionButton: {
+  // actionButton: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   backgroundColor: '#e6e0d9',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 20,
+  //   borderRadius: 8,
+  //   gap: 8,
+  // },
+  mapButton: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#e6e0d9',
@@ -366,9 +393,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 8,
     gap: 8,
-  },
-  mapButton: {
-    backgroundColor: '#e6e0d9',
   },
   buttonText: {
     color: 'black',

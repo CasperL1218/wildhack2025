@@ -1,10 +1,15 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, KeyboardAvoidingView, Platform, Pressable, Modal, Alert } from 'react-native';
+import ImageResizer from 'react-native-image-resizer';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { useState, useRef } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { usePhotoContext } from '../../context/PhotoContext';
+import { useResponseContext } from '../../context/ResponseContext';
+
+import axios from 'axios';
+import FormData from 'form-data';
 
 type PhotoItem = {
   uri: string;
@@ -27,6 +32,7 @@ export default function SnapScreen() {
   const [editingZip, setEditingZip] = useState<boolean>(false);
   const cameraRef = useRef<CameraView>(null);
   const { setPhotos: setGlobalPhotos } = usePhotoContext();
+  const { setResponse } = useResponseContext();
 
   // Request permissions
   const requestPermissions = async () => {
@@ -87,7 +93,8 @@ export default function SnapScreen() {
   };
 
   // Handle generating with the photos
-  const generateWithPhotos = () => {
+  const generateWithPhotos = async () => {
+    console.log("generateWithPhotos called");
     if (photos.length === 0) {
       // Show toast message if no photos
       try {
@@ -97,15 +104,123 @@ export default function SnapScreen() {
       }
       return;
     }
+    // TODO!
+    router.push('/(tabs)/results')
 
     // Log photo info before navigating
     console.log('Image data being passed:', photos);
 
-    // Save photos to global state
-    setGlobalPhotos(photos);
+  async function convertHEICtoJPG(photo: PhotoItem) {
+    try {
+      let jpegUri = photo.uri;
 
-    // Navigate to results tab
-    router.push('/(tabs)/results');
+      if (Platform.OS === 'ios') {
+        const resizedImage = await ImageResizer.createResizedImage(photo.uri, 800, 600, 'JPEG', 90, 0);
+        jpegUri = resizedImage.uri;
+      }
+
+      const response = await fetch(jpegUri);
+      const blob = await response.blob();
+
+      const fileName = photo.dishName ? `${photo.dishName}.jpg` : 'image.jpg';
+      const jpgFile = new File([blob], fileName, { type: 'image/jpeg' });
+
+      return jpgFile;
+    } catch (error) {
+        console.error("Error converting HEIC to JPG:", error);
+        return null;
+    }
+  }
+
+    const formData = new FormData();
+    for (let i = 0; i < photos.length; i++) {
+      const photo = photos[i];
+
+      console.log(`Processing photo at index ${i}:`, photo);
+
+      if (!photo || !photo.uri) {
+          console.error(`Invalid photo at index ${i}:`, photo);
+          Alert.alert("Error", `Invalid photo data at index ${i}.`);
+          return; // Stop processing if an invalid photo is found
+      }
+
+      try {
+        const jpgFile = await convertHEICtoJPG(photo); // Await the conversion
+    
+        if (jpgFile) {
+          formData.append('file', jpgFile); // Append the JPG File
+          console.log(`JPG file appended to formData at index ${i}`);
+        } else {
+          console.error(`HEIC to JPG conversion failed at index ${i}:`, photo);
+          Alert.alert('Error', `HEIC to JPG conversion failed at index ${i}.`);
+          return; // Stop processing if conversion fails
+        }
+      } catch (error) {
+        console.error(`Error processing photo at index ${i}:`, error);
+        Alert.alert('Error', `Failed to process photo at index ${i}.`);
+        return; // Stop processing if an error occurs
+      }
+
+      // try {
+      //     console.log(`Photo URI at index ${i}:`, photo.uri);
+      //     const base64Data = photo.uri.split(',')[1];
+      //     console.log(`Base64 data at index ${i}:`, base64Data); // Add this line
+      //     const byteCharacters = atob(base64Data);
+      //     console.log(`Byte characters length at index ${i}:`, byteCharacters.length);
+      //     const byteArray = new Uint8Array(byteCharacters.length);
+
+      //     for (let j = 0; j < byteCharacters.length; j++) {
+      //         byteArray[j] = byteCharacters.charCodeAt(j);
+      //     }
+
+      //     const blob = new Blob([byteArray], { type: 'image/jpeg' });
+      //     console.log(`Blob created at index ${i}:`, blob);
+      //     const file = new File([blob], photo.dishName || `image_${i}.jpg`, { type: 'image/jpeg' });
+      //     console.log(`File at index ${i}:`, file);
+
+      //     formData.append('file', file); // Append each file with a unique name
+      //     console.log(`File appended to formData at index ${i}`);
+
+          
+
+      // } catch (error) {
+      //     console.error(`Error processing photo at index ${i}:`, error);
+      //     Alert.alert("Error", `Failed to process photo at index ${i}.`);
+      //     return; // Stop processing if there's an error
+      // }
+  }
+
+  formData.append('zipcode', zipCode);
+  console.log('Form data prepared:', formData);
+
+  setGlobalPhotos(photos);
+  try {
+      const response = await axios.post('http://127.0.0.1:5000/scan-food', formData, {
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+      });
+
+      console.log('Response from server:', response);
+
+      setResponse(response.data);
+
+      
+      router.push('/(tabs)/results');
+      // router.push({
+      //   pathname: '/(tabs)/results'
+      // });
+
+  } catch (error) {
+      console.error('Error sending data to server:', error);
+      Alert.alert("Error", "Failed to send data to server.");
+  }
+
+    // // Save photos to global state
+    // setGlobalPhotos(photos);
+
+    // // Navigate to results tab
+    // router.push('/(tabs)/results');
   };
 
   // Main landing page
@@ -114,9 +229,20 @@ export default function SnapScreen() {
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        
       >
+
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.header}>
+
+        <View style={styles.header}>
+          <Image
+              source={require('../../assets/images/replatelogo1.png')} // Make sure the logo path is correct
+              style={styles.logo}
+            />
+          <Text style={styles.appName}>RePlate</Text>
+        </View>
+
+          <View style={styles.titleContainer}>
             <Text style={styles.title}>Recreate a Plate?</Text>
             <Text style={styles.subtitle}>Take or upload photos of your dish to recreate its recipe!</Text>
           </View>
@@ -339,12 +465,30 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#84a24d',
   },
+  header: {
+    marginTop: 40,
+    marginLeft: 30,
+    flexDirection: 'row', // Align logo and title horizontally
+    alignItems: 'center', // Vertically center the
+  },
+  appName: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    fontFamily: "Baloo",
+    color: 'black',
+    marginTop: 15,
+  },
+  logo: {
+    width: 50, // Adjust width as per your logo size
+    height: 40, // Adjust height as per your logo size
+    paddingRight: 5,
+  },
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 40,
-    paddingTop: 220,
+    paddingTop: 150,
   },
-  header: {
+  titleContainer: {
     marginTop: 30,
     marginBottom: 10,
     alignItems: 'center',
@@ -553,8 +697,8 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   galleryButton: {
-    backgroundColor: '#333',
-    borderRadius: 15,
+    backgroundColor: '#333d1e',
+    borderRadius: 25,
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
@@ -566,6 +710,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 18,
     fontWeight: '500',
+    fontFamily: "Nunito",
   },
   photoWrapper: {
     position: 'relative',
@@ -596,10 +741,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
+    fontFamily: "Nunito",
   },
   modalButton: {
     backgroundColor: '#333',
-    borderRadius: 10,
+    borderRadius: 25,
     padding: 15,
     flexDirection: 'row',
     alignItems: 'center',
