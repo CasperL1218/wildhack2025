@@ -114,9 +114,20 @@ export default function SnapScreen() {
       <KeyboardAvoidingView
         style={styles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        
       >
+
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.header}>
+
+        <View style={styles.header}>
+          <Image
+              source={require('../../assets/images/replatelogo1.png')} // Make sure the logo path is correct
+              style={styles.logo}
+            />
+          <Text style={styles.appName}>RePlate</Text>
+        </View>
+
+          <View style={styles.titleContainer}>
             <Text style={styles.title}>Recreate a Plate?</Text>
             <Text style={styles.subtitle}>Take or upload photos of your dish to recreate its recipe!</Text>
           </View>
@@ -339,12 +350,30 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#84a24d',
   },
+  header: {
+    marginTop: 40,
+    marginLeft: 30,
+    flexDirection: 'row', // Align logo and title horizontally
+    alignItems: 'center', // Vertically center the
+  },
+  appName: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    fontFamily: "Baloo",
+    color: 'black',
+    marginTop: 15,
+  },
+  logo: {
+    width: 50, // Adjust width as per your logo size
+    height: 40, // Adjust height as per your logo size
+    paddingRight: 5,
+  },
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 40,
-    paddingTop: 220,
+    paddingTop: 150,
   },
-  header: {
+  titleContainer: {
     marginTop: 30,
     marginBottom: 10,
     alignItems: 'center',

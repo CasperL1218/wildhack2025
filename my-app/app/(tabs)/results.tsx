@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,13 +12,15 @@ type PhotoItem = {
 export default function ResultsScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
-  const [showAlternativeInput, setShowAlternativeInput] = useState(false);
+  // const [showAlternativeInput, setShowAlternativeInput] = useState(false);
   const { photos } = usePhotoContext();
 
   useEffect(() => {
     // Log the received photos
     console.log('Received images in results page:', photos);
   }, [photos]);
+  
+
 
   const handleOptionPress = (optionType: string) => {
     // Navigate to recipe screen with option type and photos
@@ -35,7 +37,6 @@ export default function ResultsScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.appName}>myApp</Text>
 
       <ImageBackground source={{ uri: photos[0].uri }}>
         <View
@@ -48,6 +49,7 @@ export default function ResultsScreen() {
             backgroundColor: 'rgba(230, 224, 217, 0.6)', 
           }}
         />
+ 
         <View style={styles.dishHeader}>
           <Text style={styles.dishName}>Dish Name</Text>
         </View>
@@ -56,15 +58,17 @@ export default function ResultsScreen() {
 
         <TouchableOpacity
           style={styles.alternativeButton}
-          onPress={() => setShowAlternativeInput(!showAlternativeInput)}
+          onPress={() => router.push('/snap')}
         >
           <Text style={styles.alternativeButtonText}>Something else?</Text>
         </TouchableOpacity>
         
       </ImageBackground>
-      <Text style={styles.subtitle}>Choose your own route!</Text>
+  
+  
 
       <ScrollView style={styles.optionsScrollView}>
+      <Text style={styles.subtitle}>Choose your own route!</Text>
         <TouchableOpacity
           style={styles.optionContainer}
           onPress={() => handleOptionPress('original')}
@@ -114,15 +118,38 @@ export default function ResultsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E6E0D9',
-    padding: 20,
+    backgroundColor: '#e5dbd0',
   },
-  appName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    fontFamily: 'Baloo',
+  imageBackground: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 20,
+    paddingTop: 60,
+  },  
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(230, 224, 217, 0.6)',
+  },
+  
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 20,
   },
+  
+  logo: {
+    width: 50,
+    height: 40,
+    paddingRight: 5,
+  },
+  
+  appName: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    fontFamily: 'Baloo',
+  },
+
   dishHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -130,18 +157,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   dishName: {
-    marginTop: 5,
-    marginLeft: 10,
+    marginTop: 50,
+    marginLeft: 15,
     fontSize: 36,
     fontWeight: 'bold',
     fontFamily: 'Baloo',
   },
   dishDescription: {
-    fontSize: 15,
     fontWeight: 'bold',
     fontFamily: 'Nunito',
-    marginLeft: 10,
-    marginBottom: 10,
+    padding:10,
+    marginLeft: 20,
   },
   alternativeButton: {
     backgroundColor: '#84A24D',
@@ -150,8 +176,8 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: 'center',
     alignSelf: 'center',
-    marginRight: -650,
     marginBottom: 10,
+    marginLeft: 250,
   },
   alternativeButtonText: {
     fontSize: 16,
@@ -167,6 +193,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   optionsScrollView: {
+    padding: 20,
     flex: 1,
   },
   optionContainer: {
@@ -175,9 +202,9 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   optionCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 100,
+    height: 100,
+    borderRadius: 60,
     marginRight: 20,
   },
   optionTextContainer: {

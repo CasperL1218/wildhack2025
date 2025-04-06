@@ -125,8 +125,15 @@ export default function RecipeModal() {
           {/* <Text style={styles.appName}>RePlate</Text> */}
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subtitle}>{subtitle}</Text>
-          <TouchableOpacity style={styles.startButton}>
+          <TouchableOpacity 
+          style={styles.startButton} 
+          onPress={() => router.push({
+            pathname: '/endrecipe',
+            params: {
+              mode: recipe.dishName,
+            }})}>
             <Text style={styles.startButtonText}>Start Cooking!</Text>
+            
           </TouchableOpacity>
         </View>
 
@@ -188,7 +195,12 @@ export default function RecipeModal() {
         {/* <Text style={styles.appName}>RePlate</Text> */}
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.subtitle}>{subtitle}</Text>
-        <TouchableOpacity style={styles.startButton}>
+        <TouchableOpacity style={styles.startButton}
+        onPress={() => router.push({
+          pathname: '/endrecipe',
+          params: {
+            mode: recipe.dishName,
+          }})}>
           <Text style={styles.startButtonText}>Start Cooking!</Text>
         </TouchableOpacity>
       </View>

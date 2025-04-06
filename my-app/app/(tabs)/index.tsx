@@ -56,15 +56,17 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
+
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
+
+      <View style={styles.header}>
           <Image
               source={require('../../assets/images/replatelogo1.png')} // Make sure the logo path is correct
               style={styles.logo}
             />
           <Text style={styles.title}>RePlate</Text>
         </View>
-
+      
         <View style={styles.profileSection}>
           <View style={styles.profileImageContainer}>
             <TouchableOpacity onPress={pickProfile}>
