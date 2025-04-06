@@ -21,7 +21,7 @@ export default function ProfileScreen() {
     role: "Food Explorer",
     location: "Lincoln, NE",
     zipcode: "60201",
-    favoriteRoute: "Farmer's Market to Kitchen",
+    favoriteRoute: "FavRoute",
     recipesCount: 27,
     bio: "Passionate about local food and supporting farmers in my community. I love creating seasonal recipes and exploring new farmers markets.",
     achievements: ["Market Maven", "Recipe Creator", "Local Food Champion"]

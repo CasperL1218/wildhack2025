@@ -84,10 +84,10 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 5,
-    paddingTop: 60,
+    paddingTop: 70,
   },
   title: {
-    fontSize: 28,
+    fontSize: 40,
     fontWeight: 'bold',
     fontFamily: 'Baloo',
     color: 'black',
@@ -96,27 +96,13 @@ const styles = StyleSheet.create({
   subtitle: {
   },
   description: {
-    fontSize: 15,
+    fontSize: 20,
     fontWeight: 'bold',
     fontFamily: 'Baloo',
     color: 'black',
     textAlign: 'center',
+    marginBottom: -5,
   },
-  // resumeButton: {
-  //   backgroundColor: '#e6e0d9',
-  //   paddingVertical: 12,
-  //   paddingHorizontal: 20,
-  //   borderRadius: 25,
-  //   alignItems: 'center',
-  //   alignSelf: 'center',
-  //   marginBottom: 10,
-  // },
-  // resumeButtonText: {
-  //   fontSize: 15,
-  //   fontWeight: 'bold',
-  //   color: 'black',
-  //   textAlign: 'center',
-  // },
   scrollView: {
     flex: 1,
     padding: 20,
@@ -130,13 +116,13 @@ const styles = StyleSheet.create({
     height: 200,
     padding: 5,
     aspectRatio: 1,
-    marginBottom: 20,
+    marginBottom: 5,
   },
   recipeCard: {
     flexDirection: 'row',
     backgroundColor: '#222',
     borderRadius: 12,
-    marginBottom: 15,
+    marginBottom: 12,
     overflow: 'hidden',
     alignItems: 'center',
     alignSelf: 'center',
