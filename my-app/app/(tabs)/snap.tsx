@@ -190,11 +190,14 @@ export default function SnapScreen() {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.header}>
-            <Text style={styles.title}>Food Recognition</Text>
-            <Text style={styles.subtitle}>Take or upload photos of your food</Text>
+            <Text style={styles.title}>Recreate a Plate?</Text>
+            <Text style={styles.subtitle}>Take or upload photos of your dish to recreate its recipe!</Text>
           </View>
 
           {/* ZIP Code Input */}
+
+          <Text style={styles.zipTitle}>To source local ingredients, enter ZIP: </Text>
+
           <TouchableOpacity
             style={styles.zipContainer}
             onPress={() => setEditingZip(true)}
@@ -212,10 +215,13 @@ export default function SnapScreen() {
                 placeholder="Enter ZIP Code"
                 placeholderTextColor="#999"
               />
-            ) : (
-              <Text style={styles.zipText}>Your ZIP Code: {zipCode}</Text>
-            )}
+            ) : 
+            (
+              <Text style={styles.zipText}>{zipCode}</Text>
+            )
+            }
           </TouchableOpacity>
+
 
           {photos.length > 0 && (
             <View style={styles.photosContainer}>
@@ -247,7 +253,7 @@ export default function SnapScreen() {
             style={styles.uploadPhotoButton}
             onPress={addNewPhoto}
           >
-            <Ionicons name="camera" size={32} color="white" />
+            {/* <Ionicons name="camera" size={32} color="black" /> */}
             <Text style={styles.uploadPhotoText}>+ Upload Image / Take Photo</Text>
           </TouchableOpacity>
 
@@ -269,7 +275,7 @@ export default function SnapScreen() {
             style={styles.generateButton}
             onPress={generateWithPhotos}
           >
-            <Text style={styles.generateButtonText}>Generate</Text>
+            <Text style={styles.generateButtonText}>Recreate Plate</Text>
           </TouchableOpacity>
 
           {/* Upload Modal */}
@@ -281,7 +287,7 @@ export default function SnapScreen() {
           >
             <View style={styles.modalOverlay}>
               <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>Choose an Option</Text>
+                {/* <Text style={styles.modalTitle}>Choose an Option</Text> */}
 
                 <TouchableOpacity
                   style={styles.modalButton}
@@ -404,45 +410,54 @@ export default function SnapScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
+    backgroundColor: '#84a24d',
   },
   scrollContent: {
     flexGrow: 1,
-    padding: 20,
+    paddingHorizontal: 40,
+    paddingTop: 220,
   },
   header: {
-    marginTop: 40,
-    marginBottom: 30,
+    marginTop: 30,
+    marginBottom: 10,
     alignItems: 'center',
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 10,
+    fontSize: 40,
+    color: 'black',
+    fontFamily: 'Baloo',
   },
   subtitle: {
-    fontSize: 16,
-    color: '#aaa',
+    fontSize: 20,
+    paddingBottom: 20,
+    color: '#black',
+    fontFamily: 'Nunito',
     textAlign: 'center',
   },
+  zipTitle: {
+    fontFamily: 'Baloo',
+    textAlign: 'center',
+    fontSize: 16,
+    marginBottom: 10,
+  },
   zipContainer: {
-    backgroundColor: '#333',
+    backgroundColor: '#e6e0d9',
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 25,
     marginBottom: 25,
     alignItems: 'center',
     justifyContent: 'center',
   },
   zipText: {
-    color: 'white',
+    color: 'black',
+    fontFamily: 'Nunito',
     fontSize: 16,
-    fontWeight: '500',
+    // fontWeight: '500',
   },
   zipInput: {
-    color: 'white',
+    color: 'black',
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: 'Nunito',
     textAlign: 'center',
     width: '100%',
     paddingVertical: 5,
@@ -474,41 +489,42 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   uploadPhotoButton: {
-    backgroundColor: '#333',
-    borderRadius: 15,
-    padding: 20,
+    backgroundColor: '#e6e0d9',
+    borderRadius: 25,
+    padding: 15,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     marginBottom: 25,
   },
   uploadPhotoText: {
-    color: 'white',
+    color: 'black',
     marginLeft: 15,
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: 'Nunito',
   },
   dishNameContainer: {
     marginBottom: 25,
   },
   input: {
-    backgroundColor: '#333',
+    backgroundColor: '#e6e0d9',
     borderRadius: 10,
     padding: 15,
-    color: 'white',
+    color: 'black',
     fontSize: 16,
+    fontFamily: 'Nunito',
   },
   generateButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 10,
+    backgroundColor: '#333d1e',
+    borderRadius: 25,
     padding: 15,
     alignItems: 'center',
     marginBottom: 30,
   },
   generateButtonText: {
-    color: 'white',
+    color: '#e6e0d9',
     fontSize: 18,
-    fontWeight: '600',
+    fontFamily: 'Baloo',
   },
   message: {
     textAlign: 'center',
@@ -669,7 +685,7 @@ const styles = StyleSheet.create({
   modalButtonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: 'Nunito',
   },
   cancelButton: {
     backgroundColor: 'transparent',
@@ -679,7 +695,7 @@ const styles = StyleSheet.create({
   cancelButtonText: {
     color: '#ff6b6b',
     fontSize: 16,
-    fontWeight: '500',
+    fontFamily: 'Nunito',
     textAlign: 'center',
     width: '100%',
   },

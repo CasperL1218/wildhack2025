@@ -40,22 +40,29 @@ export default function MyRecipesScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>My Recipes</Text>
-        <Text style={styles.subtitle}>Your saved recipes</Text>
+        <Text style={styles.title}>Saved Recipes</Text>
       </View>
-
+      <View style={styles.subtitle}>
+        <Text style={styles.description}>xx week streaks</Text>
+        <Text style={styles.description}>xx recipes saved</Text>
+      </View>
+      {/* <TouchableOpacity
+        style={styles.resumeButton}
+        onPress={() => setShowAlternativeInput(!showAlternativeInput)}
+      >
+        <Text style={styles.resumeButtonText}>Resume Recipe</Text>
+      </TouchableOpacity> */}
       {recipes.length > 0 ? (
         <ScrollView style={styles.scrollView}>
-          {recipes.map((recipe) => (
-            <TouchableOpacity key={recipe.id} style={styles.recipeCard}>
-              <Image source={{ uri: recipe.image }} style={styles.recipeImage} />
-              <View style={styles.recipeInfo}>
-                <Text style={styles.recipeName}>{recipe.dishName}</Text>
-                <Text style={styles.recipeDate}>{recipe.date}</Text>
+          <View style={styles.gridContainer}>
+            {recipes.map((recipe) => (
+              <View key={recipe.id} style={styles.gridItem}>
+                <TouchableOpacity key={recipe.id} style={styles.recipeCard}>
+                  <Image source={{ uri: recipe.image }} style={styles.recipeImage} />
+                </TouchableOpacity>
               </View>
-              <Ionicons name="chevron-forward" size={24} color="#999" />
-            </TouchableOpacity>
-          ))}
+            ))}
+          </View>
         </ScrollView>
       ) : (
         <View style={styles.emptyState}>
@@ -73,51 +80,60 @@ export default function MyRecipesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
+    backgroundColor: '#84A24D',
   },
   header: {
-    padding: 20,
-    paddingTop: 40,
+    padding: 5,
+    paddingTop: 70,
   },
   title: {
-    fontSize: 28,
+    fontSize: 40,
     fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 5,
+    fontFamily: 'Baloo',
+    color: 'black',
+    textAlign: 'center',
   },
   subtitle: {
-    fontSize: 16,
-    color: '#aaa',
+  },
+  description: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    fontFamily: 'Baloo',
+    color: 'black',
+    textAlign: 'center',
+    marginBottom: -5,
   },
   scrollView: {
     flex: 1,
     padding: 20,
   },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  gridItem: {
+    width: '50%',
+    height: 200,
+    padding: 5,
+    aspectRatio: 1,
+    marginBottom: 5,
+  },
   recipeCard: {
     flexDirection: 'row',
     backgroundColor: '#222',
     borderRadius: 12,
-    marginBottom: 15,
+    marginBottom: 12,
     overflow: 'hidden',
     alignItems: 'center',
+    alignSelf: 'center',
   },
   recipeImage: {
-    width: 80,
-    height: 80,
+    width: 150,
+    height: 150,
   },
   recipeInfo: {
     flex: 1,
     padding: 15,
-  },
-  recipeName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: 'white',
-    marginBottom: 5,
-  },
-  recipeDate: {
-    fontSize: 14,
-    color: '#aaa',
   },
   emptyState: {
     flex: 1,

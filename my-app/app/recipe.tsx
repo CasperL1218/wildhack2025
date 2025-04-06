@@ -33,17 +33,20 @@ export default function RecipeModal() {
       case 'sustainable':
         return {
           backgroundColor: '#8dc8c8', // Light teal color
-          title: 'Recreate Sustainably'
+          title: 'Green Warrior',
+          subtitle: 'Reimagine your dish optimizing sustainabililty.'
         };
       case 'local':
         return {
           backgroundColor: '#9376b4', // Purple color
-          title: 'Recreate Locally'
+          title: 'Local Lover',
+          subtitle: 'Reimagine your dish using local produce.'
         };
       default:
         return {
           backgroundColor: '#e18e2b', // Orange color
-          title: 'Recreate Originally'
+          title: 'The OG',
+          subtitle: 'Recreate your dish true-to-flavor.'
         };
     }
   };
@@ -63,11 +66,11 @@ export default function RecipeModal() {
   const getTabText = () => {
     switch (optionType) {
       case 'sustainable':
-        return 'Sustainably';
+        return 'Sustainable';
       case 'local':
-        return 'Locally';
+        return 'Local';
       default:
-        return 'Originally';
+        return 'Original';
     }
   };
 
@@ -109,7 +112,7 @@ export default function RecipeModal() {
     router.back();
   };
 
-  const { backgroundColor, title } = getHeaderColorAndTitle();
+  const { backgroundColor, title, subtitle } = getHeaderColorAndTitle();
   const tabColor = getTabColor();
   const tabText = getTabText();
 
@@ -119,8 +122,9 @@ export default function RecipeModal() {
       <View style={styles.container}>
         {/* Header */}
         <View style={[styles.header, { backgroundColor }]}>
-          <Text style={styles.appName}>myApp</Text>
+          {/* <Text style={styles.appName}>RePlate</Text> */}
           <Text style={styles.title}>{title}</Text>
+          <Text style={styles.subtitle}>{subtitle}</Text>
           <TouchableOpacity style={styles.startButton}>
             <Text style={styles.startButtonText}>Start Cooking!</Text>
           </TouchableOpacity>
@@ -167,11 +171,11 @@ export default function RecipeModal() {
           ))}
 
           {/* Footer Space */}
-          <View style={styles.footerSpace} />
+          {/* <View style={styles.footerSpace} /> */}
         </ScrollView>
 
         {/* Green Footer */}
-        <View style={styles.footer} />
+        {/* <View style={styles.footer} /> */}
       </View>
     );
   }
@@ -181,8 +185,9 @@ export default function RecipeModal() {
     <View style={styles.container}>
       {/* Header */}
       <View style={[styles.header, { backgroundColor }]}>
-        <Text style={styles.appName}>myApp</Text>
+        {/* <Text style={styles.appName}>RePlate</Text> */}
         <Text style={styles.title}>{title}</Text>
+        <Text style={styles.subtitle}>{subtitle}</Text>
         <TouchableOpacity style={styles.startButton}>
           <Text style={styles.startButtonText}>Start Cooking!</Text>
         </TouchableOpacity>
@@ -212,6 +217,9 @@ export default function RecipeModal() {
             </View>
           </View>
         </View>
+
+        {/* Ingredients Header if Local */}
+        <Text style={styles.ingredientsHeader}>Ingredients</Text>
 
         {/* Recipe Type Tabs */}
         <View style={styles.tabContainer}>
@@ -248,8 +256,6 @@ export default function RecipeModal() {
             )}
             </Text>
 
-        {/* Ingredients Header if Local */}
-        {optionType === 'local' && <Text style={styles.ingredientsHeader}>Ingredients</Text>}
 
         {/* Recipe Sections */}
         {recipe.ingredients.map((section, sectionIndex) => (
@@ -280,11 +286,11 @@ export default function RecipeModal() {
         )}
 
         {/* Footer Space */}
-        <View style={styles.footerSpace} />
+        {/* <View style={styles.footerSpace} /> */}
       </ScrollView>
 
       {/* Green Footer */}
-      <View style={styles.footer} />
+      {/* <View style={styles.footer} /> */}
     </View>
   );
 }
@@ -303,15 +309,21 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: 'black',
     marginBottom: 10,
     fontFamily: 'Baloo',
   },
   title: {
     fontSize: 32,
     color: '#000',
-    marginBottom: 15,
+    marginBottom: 0,
     fontFamily: 'Baloo',
+  },
+  subtitle: {
+    fontSize: 24,
+    color: '#000',
+    marginBottom: 15,
+    fontFamily: 'Nunito',
   },
   startButton: {
     backgroundColor: '#e8dfd5',
@@ -385,13 +397,14 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 20,
     fontStyle: 'italic',
+    fontFamily: 'Nunito',
     fontSize: 14,
   },
   ingredientsHeader: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'Baloo',
+    alignSelf: 'center',
     marginHorizontal: 20,
-    marginBottom: 10,
   },
   section: {
     marginHorizontal: 20,
@@ -401,7 +414,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 10,
-    fontStyle: 'italic',
     fontFamily: 'Baloo',
   },
   ingredientItem: {
@@ -415,9 +427,10 @@ const styles = StyleSheet.create({
   },
   ingredientText: {
     fontSize: 16,
+    fontFamily: 'Nunito',
   },
   adaptedIngredient: {
-    fontWeight: 'bold',
+    fontFamily: 'NunitoBold'
   },
   sourceSection: {
     marginHorizontal: 20,
@@ -434,16 +447,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  footerSpace: {
-    height: 50,
-  },
-  footer: {
-    fontFamily: 'Baloo',
-    height: 50,
-    backgroundColor: '#92b579', // Green footer
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  }
+  // footerSpace: {
+  //   height: 50,
+  // },
+  // footer: {
+  //   fontFamily: 'Baloo',
+  //   height: 70,
+  //   backgroundColor: '#84a24d', // Green footer
+  //   position: 'absolute',
+  //   bottom: 0,
+  //   left: 0,
+  //   right: 0,
+  // }
 }); 
